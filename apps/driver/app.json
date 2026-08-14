@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "HOC Connect Driver",
+    "slug": "hoc-connect-driver",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/hoc-logo.png",
+    "scheme": "hoc-connect-driver",
+    "userInterfaceStyle": "automatic",
+    "ios": {},
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#04060B",
+        "foregroundImage": "./assets/images/hoc-logo.png",
+        "monochromeImage": "./assets/images/hoc-logo.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "output": "static",
+      "favicon": "./assets/images/hoc-logo.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#04060B",
+          "image": "./assets/images/hoc-logo.png",
+          "imageWidth": 112
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}

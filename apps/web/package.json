@@ -1,0 +1,34 @@
+{
+  "name": "@hoc/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "node node_modules/next/dist/bin/next dev",
+    "build": "node node_modules/next/dist/bin/next build",
+    "start": "node node_modules/next/dist/bin/next start",
+    "lint": "node node_modules/eslint/bin/eslint.js .",
+    "typecheck": "node node_modules/typescript/bin/tsc --noEmit"
+  },
+  "dependencies": {
+    "@hoc/contracts": "workspace:*",
+    "@hoc/design-tokens": "workspace:*",
+    "@hoc/integrations": "workspace:*",
+    "framer-motion": "13.1.0",
+    "gsap": "3.15.0",
+    "lenis": "1.3.14",
+    "next": "16.3.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/node": "20.19.30",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "eslint": "9.39.4",
+    "eslint-config-next": "16.3.0",
+    "tailwindcss": "4.3.3",
+    "typescript": "5.9.3"
+  },
+  "packageManager": "pnpm@11.18.0"
+}

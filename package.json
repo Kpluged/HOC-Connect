@@ -1,0 +1,19 @@
+{
+  "name": "hoc-connect",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@11.18.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "node node_modules/turbo/bin/turbo build",
+    "dev": "node node_modules/turbo/bin/turbo dev",
+    "lint": "node node_modules/turbo/bin/turbo lint",
+    "typecheck": "node node_modules/turbo/bin/turbo typecheck"
+  },
+  "devDependencies": {
+    "turbo": "2.5.6",
+    "typescript": "5.9.3"
+  }
+}
