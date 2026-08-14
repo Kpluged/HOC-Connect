@@ -61,7 +61,7 @@ The milestone was reworked after reviewing the supplied Porsche menu recording, 
 - Added an explicit Lenis opt-out, native overflow containment, keyboard focus, and a subtle scrollbar to the secondary menu rail. A real wheel gesture moved the 720 px rail through its complete 524 px scroll range.
 - Isolated the full-screen menu in its own light colour room so the inverse homepage header cannot cascade white text into the light navigation panels.
 - Anchored the desktop panes to the fixed overlay height instead of dynamic viewport units. At the 1440 × 900 verification size, the 900 px model rail scrolled through its complete 443 px overflow range.
-- Reworked the homepage header as a dark translucent overlay with menu control at left, the approved `HOC CONNECT` name centred, and the supplied gold emblem unchanged at right.
+- Reworked the homepage header as a dark translucent overlay with menu control at left, the approved `HOC ELITE WHEELS` name centred, and the supplied gold emblem unchanged at right.
 - Added the `Mr Dafoe` display face through `next/font` for the user-requested slanted centre wordmark; Inter remains the shipping typeface everywhere else.
 - Replaced the low-resolution hero atmosphere photo with resolution-independent monochrome gradients, while preserving the supplied photography elsewhere.
 - Added a dedicated side-profile hero car with separate broad floor and tight tyre-contact shadows so the vehicle crosses the dark/light boundary without appearing to float.

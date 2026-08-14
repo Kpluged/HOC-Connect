@@ -16,7 +16,7 @@ import {
 } from "@/features/configurator/data";
 
 export const metadata: Metadata = {
-  description: "Shape a proposed HOC Connect fleet in six clear steps.",
+  description: "Shape a proposed HOC Elite Wheels fleet in six clear steps.",
   title: "Fleet configurator",
 };
 

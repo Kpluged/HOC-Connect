@@ -5,7 +5,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { SiteHeader } from "@/components/ui/site-header";
 
 export const metadata: Metadata = {
-  description: "The proposed HOC Connect journey from fleet configuration through live operations.",
+  description: "The proposed HOC Elite Wheels journey from fleet configuration through live operations.",
   title: "How it works",
 };
 
@@ -42,7 +42,7 @@ export default function HowItWorksPage() {
           From intent to operation.
         </h1>
         <p className="mt-9 max-w-[48ch] text-lg leading-8 text-contrast-high">
-          HOC Connect joins public discovery, fleet application, live operations, and administration without treating them as separate products.
+          HOC Elite Wheels joins public discovery, fleet application, live operations, and administration without treating them as separate products.
         </p>
       </header>
 

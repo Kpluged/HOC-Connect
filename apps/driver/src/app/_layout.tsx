@@ -4,6 +4,7 @@ import {
   Inter_700Bold,
   useFonts,
 } from '@expo-google-fonts/inter';
+import { MrDafoe_400Regular } from '@expo-google-fonts/mr-dafoe';
 import { hocColors } from '@hoc/design-tokens';
 import {
   DarkTheme,
@@ -50,6 +51,7 @@ export default function RootLayout() {
     Inter_400Regular,
     Inter_600SemiBold,
     Inter_700Bold,
+    MrDafoe_400Regular,
   });
 
   useEffect(() => {

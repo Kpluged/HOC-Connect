@@ -21,8 +21,8 @@ const hocWordmark = Mr_Dafoe({
 
 export const metadata: Metadata = {
   title: {
-    default: "HOC Connect",
-    template: "%s · HOC Connect",
+    default: "HOC Elite Wheels",
+    template: "%s · HOC Elite Wheels",
   },
 };
 

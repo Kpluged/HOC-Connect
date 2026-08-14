@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "HOC Connect Driver",
-    "slug": "hoc-connect-driver",
+    "name": "HOC Elite Wheels Driver",
+    "slug": "hoc-elite-wheels-driver",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/hoc-logo.png",
-    "scheme": "hoc-connect-driver",
+    "scheme": "hoc-elite-wheels-driver",
     "userInterfaceStyle": "automatic",
     "ios": {},
     "android": {
