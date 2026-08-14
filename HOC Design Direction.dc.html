@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  html, body { margin: 0; padding: 0; background: #FFFFFF; }
+  * { box-sizing: border-box; }
+  a { color: #101214; text-decoration: underline; text-underline-offset: 3px; }
+  a:hover { color: #B08F3C; }
+  ::selection { background: #101214; color: #FFFFFF; }
+</style>
+</helmet>
+
+<div style="background:#FFFFFF; color:#101214; font-family:'Helvetica Neue', Helvetica, Arial, sans-serif; -webkit-font-smoothing:antialiased; min-width:1520px; padding-bottom:120px">
+
+  <sc-if value="{{ gridOverlay }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed; inset:0; z-index:99; pointer-events:none; background:repeating-linear-gradient(to right, rgba(16,18,20,0.08) 0 1px, transparent 1px 96px)"></div>
+  </sc-if>
+
+  <!-- COVER -->
+  <section data-screen-label="Cover" style="padding:96px 88px 104px; border-bottom:1px solid rgba(16,18,20,0.12)">
+    <div style="display:flex; align-items:center; gap:20px; margin-bottom:88px">
+      <img src="hoc-logo.png" alt="HOC Aura" style="width:46px; height:auto; display:block" />
+      <div>
+        <div style="font-size:17px; font-weight:500; letter-spacing:0.16em">HOC AURA</div>
+        <div style="font-size:12px; color:#6B6E73; margin-top:5px; letter-spacing:0.10em">House Of Cersei · Lagos</div>
+      </div>
+    </div>
+    <div style="font-size:13px; font-weight:500; color:#6B6E73; margin-bottom:24px">Design direction v2 — monochrome</div>
+    <h1 style="font-size:92px; font-weight:500; line-height:0.98; letter-spacing:-0.035em; margin:0 0 32px; max-width:22ch; text-wrap:balance">A ride service in your name.</h1>
+    <p style="max-width:64ch; font-size:20px; line-height:1.55; color:#3A3D42; margin:0 0 48px">Buy a branded electric ride-hailing service outright. Choose the city, the fleet package and the livery. HOC Aura supplies the vehicles, the drivers, the charging and the software. No prior fleet experience assumed at any point.</p>
+    <div style="display:flex; gap:12px; flex-wrap:wrap">
+      <div style="background:#101214; color:#FFFFFF; border-radius:999px; padding:14px 26px; font-size:14px; font-weight:500">Automotive monochrome</div>
+      <div style="background:#F0F1F2; color:#101214; border-radius:999px; padding:14px 26px; font-size:14px; font-weight:500">One grotesque, four weights</div>
+      <div style="border:1px solid rgba(16,18,20,0.18); border-radius:999px; padding:13px 26px; font-size:14px; font-weight:500; color:#3A3D42">Gold used once per screen</div>
+    </div>
+  </section>
+
+  <!-- 01 SHIFT -->
+  <section data-screen-label="01 What changed" style="padding:96px 88px; border-bottom:1px solid rgba(16,18,20,0.12)">
+    <div style="display:flex; align-items:baseline; gap:18px; margin-bottom:52px">
+      <div style="font-size:13px; font-weight:500; color:#9CA0A6">01</div>
+      <h2 style="font-size:44px; font-weight:500; letter-spacing:-0.03em; margin:0">What changed from v1</h2>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:32px">
+      <div style="border-top:2px solid #101214; padding-top:22px">
+        <h3 style="font-size:19px; font-weight:500; margin:0 0 14px">White is the canvas</h3>
+        <p style="margin:0; font-size:16px; line-height:1.65; color:#3A3D42">Pure white pages, light grey panels for grouping, near-black type. The obsidian room survives only where it earns its keep: the owner cockpit and the fleet map. Contrast comes from photography, not from dark chrome.</p>
+      </div>
+      <div style="border-top:2px solid #101214; padding-top:22px">
+        <h3 style="font-size:19px; font-weight:500; margin:0 0 14px">One grotesque, no serif</h3>
+        <p style="margin:0; font-size:16px; line-height:1.65; color:#3A3D42">A single neo-grotesque family carries display, UI and data. Hierarchy is made with weight, size and negative tracking — never with a second typeface. Display sits at 500, body at 400, captions at 400 in grey.</p>
+      </div>
+      <div style="border-top:2px solid #101214; padding-top:22px">
+        <h3 style="font-size:19px; font-weight:500; margin:0 0 14px">Pills, not squares</h3>
+        <p style="margin:0; font-size:16px; line-height:1.65; color:#3A3D42">Controls are fully rounded: solid black primary, light grey secondary, grey chips for tags and status. Containers stay square with hairlines. No shadows, no gradients, no borders on imagery.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 PALETTE -->
+  <section data-screen-label="02 Palette" style="padding:96px 88px; border-bottom:1px solid rgba(16,18,20,0.12)">
+    <div style="display:flex; align-items:baseline; gap:18px; margin-bottom:52px">
+      <div style="font-size:13px; font-weight:500; color:#9CA0A6">02</div>
+      <h2 style="font-size:44px; font-weight:500; letter-spacing:-0.03em; margin:0">Palette</h2>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:20px">
+      <div>
+        <div style="height:132px; background:#FFFFFF; border:1px solid rgba(16,18,20,0.14)"></div>
+        <div style="margin-top:12px; font-size:14px; font-weight:500">White</div>
+        <div style="margin-top:4px; font-family:ui-monospace, Menlo, monospace; font-size:12px; color:#6B6E73">#FFFFFF · canvas</div>
+      </div>
+      <div>
+        <div style="height:132px; background:#F0F1F2"></div>
+        <div style="margin-top:12px; font-size:14px; font-weight:500">Grey 05</div>
+        <div style="margin-top:4px; font-family:ui-monospace, Menlo, monospace; font-size:12px; color:#6B6E73">#F0F1F2 · panel</div>
+      </div>
+      <div>
+        <div style="height:132px; background:#E4E6E8"></div>
+        <div style="margin-top:12px; font-size:14px; font-weight:500">Grey 10</div>
+        <div style="margin-top:4px; font-family:ui-monospace, Menlo, monospace; font-size:12px; color:#6B6E73">#E4E6E8 · secondary btn</div>
+      </div>
+      <div>
+        <div style="height:132px; background:#6B6E73"></div>
+        <div style="margin-top:12px; font-size:14px; font-weight:500">Grey 55</div>
+        <div style="margin-top:4px; font-family:ui-monospace, Menlo, monospace; font-size:12px; color:#6B6E73">#6B6E73 · captions</div>
+      </div>
+      <div>
+        <div style="height:132px; background:#101214"></div>
+        <div style="margin-top:12px; font-size:14px; font-weight:500">Ink</div>
+        <div style="margin-top:4px; font-family:ui-monospace, Menlo, monospace; font-size:12px; color:#6B6E73">#101214 · type, primary</div>
+      </div>
+      <div>
+        <div style="height:132px; background:#B08F3C"></div>
+        <div style="margin-top:12px; font-size:14px; font-weight:500">Aurum</div>
+        <div style="margin-top:4px; font-family:ui-monospace, Menlo, monospace; font-size:12px; color:#6B6E73">#B08F3C · sole accent</div>
+      </div>
+      <div>
+        <div style="height:132px; background:linear-gradient(115deg,#705010,#B08F3C 42%,#EFE6C4 68%,#A0802F)"></div>
+        <div style="margin-top:12px; font-size:14px; font-weight:500">Aurum leaf</div>
+        <div style="margin-top:4px; font-family:ui-monospace, Menlo, monospace; font-size:12px; color:#6B6E73">mark only</div>
+      </div>
+      <div>
+        <div style="height:132px; background:#3F7A5E"></div>
+        <div style="margin-top:12px; font-size:14px; font-weight:500">Signal green</div>
+        <div style="margin-top:4px; font-family:ui-monospace, Menlo, monospace; font-size:12px; color:#6B6E73">#3F7A5E · on trip</div>
+      </div>
+      <div>
+        <div style="height:132px; background:#B4483C"></div>
+        <div style="margin-top:12px; font-size:14px; font-weight:500">Signal red</div>
+        <div style="margin-top:4px; font-family:ui-monospace, Menlo, monospace; font-size:12px; color:#6B6E73">#B4483C · fault only</div>
+      </div>
+      <div>
+        <div style="height:132px; background:#0E1013"></div>
+        <div style="margin-top:12px; font-size:14px; font-weight:500">Cockpit ink</div>
+        <div style="margin-top:4px; font-family:ui-monospace, Menlo, monospace; font-size:12px; color:#6B6E73">#0E1013 · dashboard only</div>
+      </div>
+    </div>
+    <div style="margin-top:40px; display:grid; grid-template-columns:repeat(3,1fr); gap:20px">
+      <div style="background:#F0F1F2; padding:24px 26px">
+        <div style="font-size:13px; font-weight:500; margin-bottom:10px">Ratio, per screen</div>
+        <p style="margin:0; font-size:14px; line-height:1.7; color:#3A3D42">White 70 · grey panels 20 · ink 9 · gold 1. If gold reads as a colour scheme rather than a signal, remove it.</p>
+      </div>
+      <div style="background:#F0F1F2; padding:24px 26px">
+        <div style="font-size:13px; font-weight:500; margin-bottom:10px">Hairline</div>
+        <p style="margin:0; font-size:14px; line-height:1.7; color:#3A3D42; font-family:ui-monospace, Menlo, monospace">rgba(16,18,20,.12) · 1px<br />section rules 2px solid #101214</p>
+      </div>
+      <div style="background:#F0F1F2; padding:24px 26px">
+        <div style="font-size:13px; font-weight:500; margin-bottom:10px">Where gold is allowed</div>
+        <p style="margin:0; font-size:14px; line-height:1.7; color:#3A3D42">The mark. The active configurator step. The charging status. One key figure per page. Nothing else.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 TYPE -->
+  <section data-screen-label="03 Typography" style="padding:96px 88px; border-bottom:1px solid rgba(16,18,20,0.12)">
+    <div style="display:flex; align-items:baseline; gap:18px; margin-bottom:52px">
+      <div style="font-size:13px; font-weight:500; color:#9CA0A6">03</div>
+      <h2 style="font-size:44px; font-weight:500; letter-spacing:-0.03em; margin:0">Typography</h2>
+    </div>
+    <div style="display:grid; grid-template-columns:1.15fr 1fr; gap:56px; align-items:start">
+      <div>
+        <div style="font-size:104px; font-weight:500; letter-spacing:-0.04em; line-height:0.94">Aa Bb Cc</div>
+        <div style="font-size:104px; font-weight:400; letter-spacing:-0.035em; line-height:0.94; color:#3A3D42">123 482</div>
+        <div style="margin-top:22px; font-family:ui-monospace, Menlo, monospace; font-size:13px; line-height:1.8; color:#6B6E73">One neo-grotesque, weights 300 · 400 · 500 · 700.<br />Ship stack: "Helvetica Neue", Helvetica, Arial, sans-serif.<br />If licensing a face: any humanist-leaning grotesque with a<br />single-storey g and tabular figures. Never a serif, never a<br />manufacturer's proprietary face.</div>
+      </div>
+      <div style="border-left:1px solid rgba(16,18,20,0.12); padding-left:36px; display:grid; gap:20px">
+        <div style="display:flex; justify-content:space-between; gap:16px; align-items:baseline"><span style="font-size:26px; font-weight:500; letter-spacing:-0.03em">Display XL</span><span style="font-family:ui-monospace, Menlo, monospace; font-size:12px; color:#6B6E73">92/90 · 500 · -3.5%</span></div>
+        <div style="display:flex; justify-content:space-between; gap:16px; align-items:baseline"><span style="font-size:22px; font-weight:500; letter-spacing:-0.03em">Display L</span><span style="font-family:ui-monospace, Menlo, monospace; font-size:12px; color:#6B6E73">64/64 · 500 · -3%</span></div>
+        <div style="display:flex; justify-content:space-between; gap:16px; align-items:baseline"><span style="font-size:19px; font-weight:500">Section head</span><span style="font-family:ui-monospace, Menlo, monospace; font-size:12px; color:#6B6E73">44/48 · 500 · -3%</span></div>
+        <div style="display:flex; justify-content:space-between; gap:16px; align-items:baseline"><span style="font-size:17px; font-weight:500">Sub head</span><span style="font-family:ui-monospace, Menlo, monospace; font-size:12px; color:#6B6E73">19/26 · 500</span></div>
+        <div style="display:flex; justify-content:space-between; gap:16px; align-items:baseline"><span style="font-size:16px; color:#3A3D42">Body</span><span style="font-family:ui-monospace, Menlo, monospace; font-size:12px; color:#6B6E73">17/27 · 400 · #3A3D42</span></div>
+        <div style="display:flex; justify-content:space-between; gap:16px; align-items:baseline"><span style="font-size:14px; font-weight:500">Button / label</span><span style="font-family:ui-monospace, Menlo, monospace; font-size:12px; color:#6B6E73">15 · 500 · no caps</span></div>
+        <div style="display:flex; justify-content:space-between; gap:16px; align-items:baseline"><span style="font-size:13px; color:#6B6E73">Caption</span><span style="font-family:ui-monospace, Menlo, monospace; font-size:12px; color:#6B6E73">13/19 · 400 · #6B6E73</span></div>
+        <div style="display:flex; justify-content:space-between; gap:16px; align-items:baseline"><span style="font-size:16px; font-weight:400">Spec numeral<span style="font-size:11px; color:#6B6E73"> km</span></span><span style="font-family:ui-monospace, Menlo, monospace; font-size:12px; color:#6B6E73">86 · 400 · unit 22 grey</span></div>
+        <div style="margin-top:8px; font-size:13px; line-height:1.7; color:#6B6E73">No uppercase tracking anywhere. Eyebrows are sentence case in grey. Numerals are tabular so tables and counters do not jitter.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 COMPONENTS -->
+  <section data-screen-label="04 Components" style="padding:96px 88px; border-bottom:1px solid rgba(16,18,20,0.12)">
+    <div style="display:flex; align-items:baseline; gap:18px; margin-bottom:52px">
+      <div style="font-size:13px; font-weight:500; color:#9CA0A6">04</div>
+      <h2 style="font-size:44px; font-weight:500; letter-spacing:-0.03em; margin:0">Components</h2>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:20px">
+      <div style="background:#F0F1F2; padding:36px">
+        <div style="font-size:13px; color:#6B6E73; margin-bottom:24px">Buttons — 52px tall, fully rounded, no shadow</div>
+        <div style="display:flex; flex-wrap:wrap; gap:12px; align-items:center">
+          <div style="background:#101214; color:#FFFFFF; border-radius:999px; padding:16px 30px; font-size:15px; font-weight:500" style-hover="background:#3A3D42">Begin application</div>
+          <div style="background:#E4E6E8; color:#101214; border-radius:999px; padding:16px 30px; font-size:15px; font-weight:500" style-hover="background:#D6D9DC">All technical details</div>
+          <div style="border:1px solid rgba(16,18,20,0.24); border-radius:999px; padding:15px 29px; font-size:15px; font-weight:500">Compare</div>
+          <div style="font-size:15px; font-weight:500; text-decoration:underline; text-underline-offset:4px">Text link</div>
+        </div>
+        <div style="margin-top:26px; font-family:ui-monospace, Menlo, monospace; font-size:12px; color:#6B6E73; line-height:1.7">hover 160ms ease-out, fill only · focus 2px #101214 ring, 2px offset · disabled 40% opacity</div>
+      </div>
+      <div style="background:#FFFFFF; border:1px solid rgba(16,18,20,0.12); padding:36px">
+        <div style="font-size:13px; color:#6B6E73; margin-bottom:24px">Spec block — the primary information unit</div>
+        <div style="display:flex; gap:52px; flex-wrap:wrap">
+          <div>
+            <div style="font-size:13px; color:#6B6E73; margin-bottom:2px">Up to</div>
+            <div style="display:flex; align-items:baseline; gap:6px"><span style="font-size:86px; font-weight:400; letter-spacing:-0.035em; line-height:0.9">482</span><span style="font-size:22px; color:#6B6E73">km</span></div>
+            <div style="font-size:14px; color:#6B6E73; margin-top:12px">Range, combined cycle<sup style="font-size:11px">1</sup></div>
+          </div>
+          <div>
+            <div style="font-size:13px; color:#6B6E73; margin-bottom:2px">&nbsp;</div>
+            <div style="display:flex; align-items:baseline; gap:6px"><span style="font-size:86px; font-weight:400; letter-spacing:-0.035em; line-height:0.9">28</span><span style="font-size:22px; color:#6B6E73">min</span></div>
+            <div style="font-size:14px; color:#6B6E73; margin-top:12px">10 → 80% DC charge<sup style="font-size:11px">2</sup></div>
+          </div>
+        </div>
+        <div style="margin-top:22px; font-size:12px; color:#9CA0A6; line-height:1.6">Superscripts resolve to centred footnotes at the foot of the section.</div>
+      </div>
+      <div style="background:#FFFFFF; border:1px solid rgba(16,18,20,0.12); padding:36px">
+        <div style="font-size:13px; color:#6B6E73; margin-bottom:24px">Chips &amp; status — grey by default</div>
+        <div style="display:flex; flex-wrap:wrap; gap:10px">
+          <div style="background:#F0F1F2; border-radius:999px; padding:9px 18px; font-size:13px">Electric</div>
+          <div style="background:#F0F1F2; border-radius:999px; padding:9px 18px; font-size:13px">4 seats</div>
+          <div style="background:#101214; color:#FFFFFF; border-radius:999px; padding:9px 18px; font-size:13px">Selected</div>
+          <div style="background:#F0F1F2; color:#3F7A5E; border-radius:999px; padding:9px 18px; font-size:13px">On trip · 12</div>
+          <div style="background:#F0F1F2; color:#B08F3C; border-radius:999px; padding:9px 18px; font-size:13px">Charging · 3</div>
+          <div style="background:#F0F1F2; color:#B4483C; border-radius:999px; padding:9px 18px; font-size:13px">Fault · 1</div>
+          <div style="background:#F0F1F2; color:#9CA0A6; border-radius:999px; padding:9px 18px; font-size:13px">Waitlist</div>
+        </div>
+      </div>
+      <div style="background:#F0F1F2; padding:36px">
+        <div style="font-size:13px; color:#6B6E73; margin-bottom:24px">Field — white on grey, 4px radius</div>
+        <div style="max-width:440px">
+          <div style="font-size:13px; color:#6B6E73; margin-bottom:8px">Operating city</div>
+          <div style="background:#FFFFFF; border:1px solid rgba(16,18,20,0.14); border-radius:4px; padding:16px 18px; display:flex; justify-content:space-between; align-items:center"><span style="font-size:17px">Lagos, Nigeria</span><span style="color:#6B6E73; font-size:13px">▾</span></div>
+          <div style="margin-top:10px; font-size:13px; color:#6B6E73">Slots are released per city each quarter. Lagos: 40 remaining this quarter.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 SCREENS -->
+  <section data-screen-label="05 Screens" style="padding:96px 88px 40px">
+    <div style="display:flex; align-items:baseline; gap:18px; margin-bottom:20px">
+      <div style="font-size:13px; font-weight:500; color:#9CA0A6">05</div>
+      <h2 style="font-size:44px; font-weight:500; letter-spacing:-0.03em; margin:0">Key screens</h2>
+    </div>
+    <p style="max-width:72ch; font-size:17px; line-height:1.65; color:#3A3D42; margin:0 0 56px">Brand entry, overlay navigation, vehicle specification, fleet configurator, owner cockpit. The first four live in the white room; only the cockpit goes dark.</p>
+
+    <!-- A -->
+    <div style="margin-bottom:88px">
+      <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px">
+        <div style="font-size:15px; font-weight:500">A · Brand entry</div>
+        <div style="font-family:ui-monospace, Menlo, monospace; font-size:12px; color:#6B6E73">white room · full-bleed vehicle plate</div>
+      </div>
+      <div data-screen-label="A Brand entry" style="border:1px solid rgba(16,18,20,0.12); background:#FFFFFF; min-height:740px; display:flex; flex-direction:column; overflow:hidden">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:24px; padding:22px 40px; border-bottom:1px solid rgba(16,18,20,0.10)">
+          <div style="display:flex; align-items:center; gap:12px; min-width:0">
+            <img src="hoc-logo.png" alt="" style="width:26px; height:auto; display:block" />
+            <span style="font-size:14px; font-weight:500; letter-spacing:0.14em; white-space:nowrap">HOC AURA</span>
+          </div>
+          <div style="display:flex; gap:28px; font-size:15px; color:#101214; white-space:nowrap">
+            <span>Vehicles</span><span>Packages</span><span>Programme</span><span>Cities</span>
+          </div>
+          <div style="display:flex; gap:20px; align-items:center; font-size:15px; color:#101214">
+            <span style="white-space:nowrap">Account</span>
+            <div style="display:grid; gap:5px; width:22px; flex:none">
+              <div style="height:1.5px; background:#101214"></div>
+              <div style="height:1.5px; background:#101214"></div>
+            </div>
+          </div>
+        </div>
+        <div style="flex:1; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.15fr); gap:40px; align-items:center; padding:52px 40px 64px">
+          <div style="min-width:0">
+            <div style="font-size:14px; color:#6B6E73; margin-bottom:18px">Fleet packages · Lagos</div>
+            <h3 style="font-size:clamp(40px,4.6vw,66px); font-weight:500; letter-spacing:-0.035em; line-height:1.0; margin:0 0 20px">Your fleet.<br />Your name.<br />Our machine underneath.</h3>
+            <p style="font-size:17px; line-height:1.6; color:#3A3D42; margin:0 0 32px; max-width:44ch">Buy the package once. We deliver the electric vehicles, licence the drivers and run dispatch from day one. You keep the brand, the fleet and the earnings.</p>
+            <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center">
+              <div style="background:#101214; color:#FFFFFF; border-radius:999px; padding:16px 30px; font-size:15px; font-weight:500">Begin application</div>
+              <div style="background:#E4E6E8; color:#101214; border-radius:999px; padding:16px 30px; font-size:15px; font-weight:500">Explore vehicles</div>
+            </div>
+            <div style="margin-top:30px; font-size:13px; color:#9CA0A6">From ₦ figure per fleet package.<sup>1</sup> 10% reservation deposit.</div>
+          </div>
+          <div style="min-width:0; height:330px; background:#F0F1F2; display:grid; place-items:center; text-align:center; padding:20px">
+            <div style="font-family:ui-monospace, Menlo, monospace; font-size:12px; color:#6B6E73">hero vehicle plate — 3/4 front<br />white floor, soft contact shadow, no environment</div>
+          </div>
+        </div>
+      </div>
+      <sc-if value="{{ showAnnotations }}" hint-placeholder-val="{{ true }}">
+        <div style="margin-top:14px; display:grid; grid-template-columns:repeat(3,1fr); gap:22px; font-family:ui-monospace, Menlo, monospace; font-size:12px; line-height:1.7; color:#6B6E73">
+          <div><span style="color:#101214">motion — </span>plate fades in over 900ms with a 16px rise; headline lines stagger 80ms. Once only.</div>
+          <div><span style="color:#101214">header — </span>white, hairline underneath from the first pixel. No transparent-over-hero state in the white room.</div>
+          <div><span style="color:#101214">below — </span>three full-bleed statements follow: the vehicle, the city, the owner's livery. Caption only, no copy blocks.</div>
+        </div>
+      </sc-if>
+    </div>
+
+    <!-- B -->
+    <div style="margin-bottom:88px">
+      <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px">
+        <div style="font-size:15px; font-weight:500">B · Overlay navigation</div>
+        <div style="font-family:ui-monospace, Menlo, monospace; font-size:12px; color:#6B6E73">three panes · white / grey / plate</div>
+      </div>
+      <div data-screen-label="B Overlay navigation" style="border:1px solid rgba(16,18,20,0.12); min-height:700px; display:grid; grid-template-columns:minmax(0,32fr) minmax(0,42fr) minmax(180px,26fr); background:#FFFFFF; overflow:hidden">
+        <div style="min-width:0; padding:40px 36px; display:flex; flex-direction:column">
+          <div style="display:grid; gap:2px">
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:20px 22px; background:#F0F1F2; border-radius:6px"><span style="font-size:21px; font-weight:500">Vehicles</span><span style="color:#101214">›</span></div>
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:20px 22px"><span style="font-size:21px">Fleet packages</span><span style="color:#9CA0A6">›</span></div>
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:20px 22px"><span style="font-size:21px">Brand your service</span><span style="color:#9CA0A6">›</span></div>
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:20px 22px"><span style="font-size:21px">Cities &amp; slots</span><span style="color:#9CA0A6">›</span></div>
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:20px 22px"><span style="font-size:21px">Operations &amp; care</span><span style="color:#9CA0A6">›</span></div>
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:20px 22px"><span style="font-size:21px">The programme</span><span style="color:#9CA0A6">›</span></div>
+          </div>
+          <div style="margin-top:auto; padding-top:30px; border-top:1px solid rgba(16,18,20,0.12); display:flex; justify-content:space-between; align-items:center">
+            <span style="font-size:17px">Owner account</span><span style="color:#9CA0A6">›</span>
+          </div>
+        </div>
+        <div style="min-width:0; padding:40px 36px; background:#F0F1F2; overflow:hidden">
+          <div style="font-size:13px; color:#6B6E73; margin-bottom:22px">Available for allocation · Lagos</div>
+          <div style="display:grid; gap:16px">
+            <div style="padding:22px 24px">
+              <div style="font-size:22px; font-weight:500; margin-bottom:14px">Sedan · E-Class</div>
+              <div style="height:96px; background:#E4E6E8; display:grid; place-items:center; font-family:ui-monospace, Menlo, monospace; font-size:11px; color:#6B6E73">vehicle side profile</div>
+              <div style="display:flex; gap:8px; margin-top:14px"><span style="background:#FFFFFF; border-radius:999px; padding:7px 15px; font-size:12px">Electric</span><span style="background:#FFFFFF; border-radius:999px; padding:7px 15px; font-size:12px">482 km</span></div>
+            </div>
+            <div style="padding:22px 24px; background:#FFFFFF; border-radius:8px">
+              <div style="font-size:22px; font-weight:500; margin-bottom:14px">SUV · E-Class L</div>
+              <div style="height:96px; background:#F0F1F2; display:grid; place-items:center; font-family:ui-monospace, Menlo, monospace; font-size:11px; color:#6B6E73">vehicle side profile</div>
+              <div style="display:flex; gap:8px; margin-top:14px"><span style="background:#F0F1F2; border-radius:999px; padding:7px 15px; font-size:12px">Electric</span><span style="background:#F0F1F2; border-radius:999px; padding:7px 15px; font-size:12px">511 km</span></div>
+            </div>
+            <div style="padding:22px 24px; display:flex; justify-content:space-between; align-items:center">
+              <span style="font-size:22px; color:#9CA0A6">Van · Shuttle</span>
+              <span style="background:#E4E6E8; color:#6B6E73; border-radius:999px; padding:7px 15px; font-size:12px">Waitlist</span>
+            </div>
+          </div>
+        </div>
+        <div style="position:relative; background:#0E1013">
+          <div style="position:absolute; inset:0; display:grid; place-items:center; font-family:ui-monospace, Menlo, monospace; font-size:11px; color:rgba(255,255,255,0.45); text-align:center; padding:110px 24px 24px">editorial plate<br />vehicle in the city at dusk<br />static, no drift</div>
+          <div style="position:absolute; top:28px; left:28px; width:52px; height:52px; border-radius:999px; background:#FFFFFF; display:grid; place-items:center; font-size:18px; color:#101214">✕</div>
+        </div>
+      </div>
+      <sc-if value="{{ showAnnotations }}" hint-placeholder-val="{{ true }}">
+        <div style="margin-top:14px; display:grid; grid-template-columns:repeat(3,1fr); gap:22px; font-family:ui-monospace, Menlo, monospace; font-size:12px; line-height:1.7; color:#6B6E73">
+          <div><span style="color:#101214">behaviour — </span>hovering a left row swaps the grey pane's contents in place, 220ms crossfade, no layout shift. Selected row gets the grey fill.</div>
+          <div><span style="color:#101214">enter — </span>overlay wipes down from the header, 380ms cubic-bezier(.16,1,.3,1); rows stagger 40ms. Escape closes, focus trapped.</div>
+          <div><span style="color:#101214">mobile — </span>panes become two levels: list pushes left, preview slides in. Plate pane drops entirely.</div>
+        </div>
+      </sc-if>
+    </div>
+
+    <!-- C -->
+    <div style="margin-bottom:88px">
+      <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px">
+        <div style="font-size:15px; font-weight:500">C · Vehicle specification</div>
+        <div style="font-family:ui-monospace, Menlo, monospace; font-size:12px; color:#6B6E73">white room · sample figures</div>
+      </div>
+      <div data-screen-label="C Vehicle specification" style="border:1px solid rgba(16,18,20,0.12); background:#FFFFFF; padding:64px 56px 48px">
+        <div style="display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.15fr); gap:48px; align-items:center">
+          <div style="min-width:0">
+            <div style="font-size:14px; color:#6B6E73; margin-bottom:30px">Sedan · E-Class</div>
+            <div style="display:grid; gap:40px">
+              <div>
+                <div style="font-size:13px; color:#6B6E73; margin-bottom:2px">Up to</div>
+                <div style="display:flex; align-items:baseline; gap:6px"><span style="font-size:88px; font-weight:400; letter-spacing:-0.035em; line-height:0.9">482</span><span style="font-size:24px; color:#6B6E73">km</span></div>
+                <div style="font-size:15px; color:#6B6E73; margin-top:10px">Range, combined cycle<sup style="font-size:11px">1</sup></div>
+              </div>
+              <div>
+                <div style="display:flex; align-items:baseline; gap:6px"><span style="font-size:88px; font-weight:400; letter-spacing:-0.035em; line-height:0.9">28</span><span style="font-size:24px; color:#6B6E73">min</span></div>
+                <div style="font-size:15px; color:#6B6E73; margin-top:10px">10 → 80% at a 150 kW charger<sup style="font-size:11px">2</sup></div>
+              </div>
+              <div>
+                <div style="display:flex; align-items:baseline; gap:6px"><span style="font-size:88px; font-weight:400; letter-spacing:-0.035em; line-height:0.9">14</span><span style="font-size:24px; color:#6B6E73">hrs</span></div>
+                <div style="font-size:15px; color:#6B6E73; margin-top:10px">Duty cycle per charge, Lagos city driving<sup style="font-size:11px">3</sup></div>
+              </div>
+            </div>
+            <div style="display:flex; gap:12px; margin-top:44px; flex-wrap:wrap">
+              <div style="background:#101214; color:#FFFFFF; border-radius:999px; padding:16px 30px; font-size:15px; font-weight:500">Add to fleet plan</div>
+              <div style="background:#E4E6E8; color:#101214; border-radius:999px; padding:16px 30px; font-size:15px; font-weight:500">All technical details</div>
+            </div>
+          </div>
+          <div style="min-width:0; height:470px; background:#F0F1F2; display:grid; place-items:center; text-align:center; padding:24px; font-family:ui-monospace, Menlo, monospace; font-size:12px; color:#6B6E73">vehicle plate — front elevation<br />white floor, soft contact shadow</div>
+        </div>
+        <div style="margin-top:44px; padding-top:22px; border-top:1px solid rgba(16,18,20,0.10); text-align:center; font-size:12px; line-height:1.8; color:#9CA0A6">
+          <sup>1</sup>Combined cycle, manufacturer figure, preliminary value. <sup>2</sup>Charging time at 150 kW DC, 10 → 80% state of charge, battery at 23 °C.<br /><sup>3</sup>Duty cycle modelled on Lagos traffic profiles at 32 °C ambient with air conditioning in use.
+        </div>
+      </div>
+      <sc-if value="{{ showAnnotations }}" hint-placeholder-val="{{ true }}">
+        <div style="margin-top:14px; display:grid; grid-template-columns:repeat(3,1fr); gap:22px; font-family:ui-monospace, Menlo, monospace; font-size:12px; line-height:1.7; color:#6B6E73">
+          <div><span style="color:#101214">rule — </span>numerals count up from 0 once, on first entry into the viewport. Tabular figures so nothing jitters.</div>
+          <div><span style="color:#101214">rule — </span>every figure carries a superscript; footnotes sit centred at the section foot in 12px grey.</div>
+          <div><span style="color:#101214">nav — </span>a slim sticky anchor bar appears under the header after the hero: Overview · Range · Charging · Interior · Package.</div>
+        </div>
+      </sc-if>
+    </div>
+
+    <!-- D -->
+    <div style="margin-bottom:88px">
+      <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px">
+        <div style="font-size:15px; font-weight:500">D · Fleet configurator</div>
+        <div style="font-family:ui-monospace, Menlo, monospace; font-size:12px; color:#6B6E73">the commerce core · sample figures</div>
+      </div>
+      <div data-screen-label="D Fleet configurator" style="border:1px solid rgba(16,18,20,0.12); background:#FFFFFF; display:grid; grid-template-columns:minmax(0,22fr) minmax(0,48fr) minmax(250px,30fr); min-height:760px; overflow:hidden">
+        <div style="min-width:0; padding:36px 30px; border-right:1px solid rgba(16,18,20,0.10)">
+          <div style="font-size:13px; color:#6B6E73; margin-bottom:26px">Configure</div>
+          <div style="display:grid; gap:4px">
+            <div style="padding:15px 18px; background:#101214; color:#FFFFFF; border-radius:6px; display:flex; justify-content:space-between; font-size:15px"><span>01 City</span><span style="color:#B08F3C">Lagos</span></div>
+            <div style="padding:15px 18px; display:flex; justify-content:space-between; font-size:15px"><span>02 Fleet size</span><span style="color:#6B6E73">12</span></div>
+            <div style="padding:15px 18px; display:flex; justify-content:space-between; font-size:15px"><span>03 Vehicle mix</span><span style="color:#6B6E73">2 types</span></div>
+            <div style="padding:15px 18px; display:flex; justify-content:space-between; font-size:15px"><span>04 Livery &amp; name</span><span style="color:#9CA0A6">—</span></div>
+            <div style="padding:15px 18px; display:flex; justify-content:space-between; font-size:15px"><span>05 Package</span><span style="color:#9CA0A6">—</span></div>
+            <div style="padding:15px 18px; display:flex; justify-content:space-between; font-size:15px; color:#9CA0A6"><span>06 Review</span><span>—</span></div>
+          </div>
+          <div style="margin-top:32px; font-size:13px; line-height:1.7; color:#6B6E73">Each step explains what the choice affects and who handles it after delivery.</div>
+        </div>
+        <div style="min-width:0; padding:36px; background:#F0F1F2; display:flex; flex-direction:column">
+          <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:22px">
+            <div style="font-size:34px; font-weight:500; letter-spacing:-0.03em">Vehicle mix</div>
+            <div style="font-size:14px; color:#6B6E73">12 of 12 allocated</div>
+          </div>
+          <div style="flex:1; background:#E4E6E8; display:grid; place-items:center; font-family:ui-monospace, Menlo, monospace; font-size:12px; color:#6B6E73">selected vehicle, rotatable 3/4 view</div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:20px">
+            <div style="background:#FFFFFF; border-radius:8px; padding:20px 22px">
+              <div style="display:flex; justify-content:space-between; align-items:center"><span style="font-size:16px; font-weight:500">Sedan · E-Class</span><span style="font-size:22px">8</span></div>
+              <div style="display:flex; gap:8px; margin-top:14px"><div style="background:#F0F1F2; border-radius:999px; width:36px; height:36px; display:grid; place-items:center">−</div><div style="background:#F0F1F2; border-radius:999px; width:36px; height:36px; display:grid; place-items:center">+</div></div>
+            </div>
+            <div style="background:#FFFFFF; border-radius:8px; padding:20px 22px">
+              <div style="display:flex; justify-content:space-between; align-items:center"><span style="font-size:16px; font-weight:500">SUV · E-Class L</span><span style="font-size:22px">4</span></div>
+              <div style="display:flex; gap:8px; margin-top:14px"><div style="background:#F0F1F2; border-radius:999px; width:36px; height:36px; display:grid; place-items:center">−</div><div style="background:#F0F1F2; border-radius:999px; width:36px; height:36px; display:grid; place-items:center">+</div></div>
+            </div>
+          </div>
+        </div>
+        <div style="min-width:0; padding:36px 30px; border-left:1px solid rgba(16,18,20,0.10); display:flex; flex-direction:column">
+          <div style="font-size:13px; color:#6B6E73; margin-bottom:26px">Your package</div>
+          <div style="display:grid; gap:16px; font-size:15px">
+            <div style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(16,18,20,0.10); padding-bottom:12px"><span style="color:#6B6E73">City</span><span>Lagos</span></div>
+            <div style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(16,18,20,0.10); padding-bottom:12px"><span style="color:#6B6E73">Vehicles</span><span>12</span></div>
+            <div style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(16,18,20,0.10); padding-bottom:12px"><span style="color:#6B6E73">Drivers supplied</span><span>24</span></div>
+            <div style="display:flex; justify-content:space-between; border-bottom:1px solid rgba(16,18,20,0.10); padding-bottom:12px"><span style="color:#6B6E73">Charging &amp; care</span><span>24 mo</span></div>
+          </div>
+          <div style="margin-top:auto">
+            <div style="font-size:13px; color:#6B6E73; margin-bottom:6px">Package total, one payment</div>
+            <div style="display:flex; align-items:baseline; gap:6px; margin-bottom:6px"><span style="font-size:24px; color:#6B6E73">₦</span><span style="font-size:52px; font-weight:400; letter-spacing:-0.035em; line-height:1">figure</span></div>
+            <div style="font-size:13px; color:#6B6E73; margin-bottom:22px">Reservation deposit 10% · balance before delivery<sup>1</sup></div>
+            <div style="background:#101214; color:#FFFFFF; border-radius:999px; padding:16px; text-align:center; font-size:15px; font-weight:500">Continue to livery</div>
+          </div>
+        </div>
+      </div>
+      <sc-if value="{{ showAnnotations }}" hint-placeholder-val="{{ true }}">
+        <div style="margin-top:14px; display:grid; grid-template-columns:repeat(3,1fr); gap:22px; font-family:ui-monospace, Menlo, monospace; font-size:12px; line-height:1.7; color:#6B6E73">
+          <div><span style="color:#101214">state — </span>deep-linkable and resumable per step; guest configuration merges into the account on sign-in.</div>
+          <div><span style="color:#101214">total — </span>recalculates on every change with a 240ms tabular number tween. Never animates on first paint.</div>
+          <div><span style="color:#101214">gating — </span>city slots throttle fleet size; over-capacity choices become waitlist rows with a reason, never disabled silently.</div>
+        </div>
+      </sc-if>
+    </div>
+
+    <!-- E -->
+    <div style="margin-bottom:32px">
+      <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px">
+        <div style="font-size:15px; font-weight:500">E · Owner cockpit</div>
+        <div style="font-family:ui-monospace, Menlo, monospace; font-size:12px; color:#6B6E73">the one dark room · sample figures</div>
+      </div>
+      <div data-screen-label="E Owner cockpit" style="border:1px solid rgba(16,18,20,0.12); background:#0E1013; color:#FFFFFF; min-height:790px; display:grid; grid-template-columns:minmax(0,1fr) minmax(240px,300px); overflow:hidden">
+        <div style="min-width:0; padding:32px 36px; border-right:1px solid rgba(255,255,255,0.10); display:flex; flex-direction:column">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:20px; padding-bottom:24px; border-bottom:1px solid rgba(255,255,255,0.10)">
+            <div style="display:flex; align-items:center; gap:14px">
+              <div style="width:34px; height:34px; border-radius:999px; background:#FFFFFF; color:#101214; display:grid; place-items:center; font-size:15px; font-weight:500">K</div>
+              <div>
+                <div style="font-size:17px; font-weight:500">Kova Rides</div>
+                <div style="font-size:13px; color:#9CA0A6; margin-top:2px">Lagos · operator 0142 · live</div>
+              </div>
+            </div>
+            <div style="display:flex; gap:8px">
+              <span style="background:rgba(255,255,255,0.08); color:#7CC49E; border-radius:999px; padding:8px 15px; font-size:12px">On trip 8</span>
+              <span style="background:rgba(255,255,255,0.08); color:#D8BE72; border-radius:999px; padding:8px 15px; font-size:12px">Charging 3</span>
+              <span style="background:rgba(255,255,255,0.08); color:#9CA0A6; border-radius:999px; padding:8px 15px; font-size:12px">Idle 1</span>
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr)); gap:1px; background:rgba(255,255,255,0.10); margin:26px 0">
+            <div style="background:#0E1013; padding:22px 20px">
+              <div style="font-size:13px; color:#9CA0A6; margin-bottom:12px">Today's revenue</div>
+              <div style="font-size:30px; font-weight:400; letter-spacing:-0.03em">₦ figure</div>
+            </div>
+            <div style="background:#0E1013; padding:22px 20px">
+              <div style="font-size:13px; color:#9CA0A6; margin-bottom:12px">Trips</div>
+              <div style="font-size:30px; font-weight:400; letter-spacing:-0.03em">184</div>
+            </div>
+            <div style="background:#0E1013; padding:22px 20px">
+              <div style="font-size:13px; color:#9CA0A6; margin-bottom:12px">Utilisation</div>
+              <div style="font-size:30px; font-weight:400; letter-spacing:-0.03em">67<span style="font-size:16px; color:#9CA0A6">%</span></div>
+            </div>
+            <div style="background:#0E1013; padding:22px 20px">
+              <div style="font-size:13px; color:#9CA0A6; margin-bottom:12px">Energy cost</div>
+              <div style="font-size:30px; font-weight:400; letter-spacing:-0.03em">₦ figure</div>
+            </div>
+          </div>
+          <div style="border:1px solid rgba(255,255,255,0.10); padding:24px; margin-bottom:22px">
+            <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:20px">
+              <div style="font-size:15px; font-weight:500">Utilisation · 24 h</div>
+              <div style="font-size:13px; color:#9CA0A6">per vehicle hour</div>
+            </div>
+            <div style="display:flex; align-items:flex-end; gap:6px; height:106px">
+              <div style="flex:1; height:22%; background:rgba(255,255,255,0.22)"></div>
+              <div style="flex:1; height:14%; background:rgba(255,255,255,0.22)"></div>
+              <div style="flex:1; height:30%; background:rgba(255,255,255,0.28)"></div>
+              <div style="flex:1; height:56%; background:rgba(255,255,255,0.34)"></div>
+              <div style="flex:1; height:78%; background:rgba(255,255,255,0.5)"></div>
+              <div style="flex:1; height:64%; background:rgba(255,255,255,0.42)"></div>
+              <div style="flex:1; height:48%; background:rgba(255,255,255,0.32)"></div>
+              <div style="flex:1; height:52%; background:rgba(255,255,255,0.32)"></div>
+              <div style="flex:1; height:70%; background:rgba(255,255,255,0.44)"></div>
+              <div style="flex:1; height:88%; background:#B08F3C"></div>
+              <div style="flex:1; height:60%; background:rgba(255,255,255,0.4)"></div>
+              <div style="flex:1; height:34%; background:rgba(255,255,255,0.26)"></div>
+            </div>
+          </div>
+          <div style="border:1px solid rgba(255,255,255,0.10)">
+            <div style="display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; padding:14px 22px; font-size:13px; color:#9CA0A6; border-bottom:1px solid rgba(255,255,255,0.10)">
+              <div>Vehicle</div><div>Driver</div><div>State of charge</div><div>Status</div>
+            </div>
+            <div style="display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; padding:16px 22px; font-size:15px; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06)">
+              <div>Sedan · KV-0113</div><div style="color:#9CA0A6">A. Okonkwo</div><div>72%</div><div style="color:#7CC49E">On trip</div>
+            </div>
+            <div style="display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; padding:16px 22px; font-size:15px; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06)">
+              <div>SUV · KV-0208</div><div style="color:#9CA0A6">M. Bello</div><div>34%</div><div style="color:#D8BE72">Charging</div>
+            </div>
+            <div style="display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; padding:16px 22px; font-size:15px; align-items:center">
+              <div>Sedan · KV-0117</div><div style="color:#9CA0A6">Unassigned</div><div>91%</div><div style="color:#9CA0A6">Idle</div>
+            </div>
+          </div>
+        </div>
+        <div style="position:relative; background:#111417">
+          <div style="position:absolute; inset:18px; border:1px solid rgba(255,255,255,0.10); display:grid; place-items:center; text-align:center; padding:20px; font-family:ui-monospace, Menlo, monospace; font-size:11px; color:rgba(255,255,255,0.45)">live fleet map<br />dark tiles, white pins, gold for charging</div>
+        </div>
+      </div>
+      <sc-if value="{{ showAnnotations }}" hint-placeholder-val="{{ true }}">
+        <div style="margin-top:14px; display:grid; grid-template-columns:repeat(3,1fr); gap:22px; font-family:ui-monospace, Menlo, monospace; font-size:12px; line-height:1.7; color:#6B6E73">
+          <div><span style="color:#101214">why dark — </span>the cockpit is watched for hours, often at night, next to a live map. It is the only route that inverts.</div>
+          <div><span style="color:#101214">identity — </span>the cockpit wears the owner's brand and one accent; HOC Aura recedes to a footer credit.</div>
+          <div><span style="color:#101214">data — </span>money figures shown as ₦ figure. Unwired metrics render an explicit "awaiting telemetry" state, never invented numbers.</div>
+        </div>
+      </sc-if>
+    </div>
+  </section>
+
+  <!-- 06 RULES -->
+  <section data-screen-label="06 Rules" style="padding:70px 88px 96px; border-top:1px solid rgba(16,18,20,0.12)">
+    <div style="display:flex; align-items:baseline; gap:18px; margin-bottom:52px">
+      <div style="font-size:13px; font-weight:500; color:#9CA0A6">06</div>
+      <h2 style="font-size:44px; font-weight:500; letter-spacing:-0.03em; margin:0">Rules &amp; motion</h2>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:20px">
+      <div style="background:#F0F1F2; padding:36px">
+        <div style="font-size:15px; font-weight:500; margin-bottom:22px">Motion</div>
+        <div style="display:grid; gap:14px; font-family:ui-monospace, Menlo, monospace; font-size:13px; line-height:1.7; color:#3A3D42">
+          <div>page enter — 500ms fade + 12px rise, cubic-bezier(.16,1,.3,1)</div>
+          <div>overlay — 380ms wipe, rows stagger 40ms</div>
+          <div>hover — 160ms ease-out, fill and underline only, never scale</div>
+          <div>numerals — 900ms count-up, once, tabular figures</div>
+          <div>totals — 240ms tween on change only</div>
+          <div>reduced motion — opacity only, counters render final value</div>
+        </div>
+      </div>
+      <div style="background:#F0F1F2; padding:36px">
+        <div style="font-size:15px; font-weight:500; margin-bottom:22px">Non-negotiables</div>
+        <div style="display:grid; gap:14px; font-size:16px; line-height:1.6; color:#3A3D42">
+          <div>No shadows, no gradients except the logo leaf. Depth is hairlines and grey panels.</div>
+          <div>Radius: 999px controls and chips, 8px cards, 4px fields, 0 containers.</div>
+          <div>One gold element per screen. If gold reads as decoration, delete it.</div>
+          <div>Imagery is full-bleed or centred on a grey plate. Never rounded, never bordered, never a car on a photographic background in UI.</div>
+          <div>No uppercase tracking, no serif, no second typeface, no icon set beyond account, chevron, close and map pin.</div>
+          <div>Body never below 15px; spec numerals never below 56px desktop; tap targets 44px minimum.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showAnnotations&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Direction doc&quot;},&quot;gridOverlay&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Direction doc&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      showAnnotations: this.props.showAnnotations ?? true,
+      gridOverlay: this.props.gridOverlay ?? false
+    };
+  }
+}
+</script>
+</body>
+</html>
