@@ -1,10 +1,10 @@
-# HOC Connect — Architecture, Routes, Drizzle Schema, PostGIS, and RLS
+# HOC Elite Wheels — Architecture, Routes, Drizzle Schema, PostGIS, and RLS
 
 Status: Milestone 2 proposal. No application scaffold or production migration has been created yet.
 
 ## 1. Architecture boundary
 
-HOC Connect will use a workspace with two applications and shared packages:
+HOC Elite Wheels will use a workspace with two applications and shared packages:
 
 - `apps/web`: Next.js App Router for the Storefront, commerce journey, Owner Space, and HOC Console.
 - `apps/driver`: Expo/React Native for driver authentication, availability, offers, navigation handoff, live location, trip status, and earnings.
@@ -679,7 +679,7 @@ Persisted snapshots and trip events remain in Postgres for recovery, reporting, 
 
 - Supabase now recommends private Broadcast channels for scalable, authorized realtime flows; Postgres Changes remains suitable for simpler low-volume cases.
 - The `realtime` schema is locked against structural changes; policies on `realtime.messages` remain supported.
-- New tables are no longer assumed to be exposed automatically through the Data API. HOC Connect intentionally keeps the `app` schema unexposed and serves business operations through tRPC with RLS context.
+- New tables are no longer assumed to be exposed automatically through the Data API. HOC Elite Wheels intentionally keeps the `app` schema unexposed and serves business operations through tRPC with RLS context.
 - Supabase extension version pinning is deprecated, so the PostGIS migration does not pin a version.
 - Next.js 16 uses `proxy.ts`; it is used only for optimistic redirects, never as the authorization boundary.
 

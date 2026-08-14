@@ -18,7 +18,7 @@ export default function HomeScreen() {
           style={styles.logo}
         />
         <View style={styles.copy}>
-          <Text style={[styles.eyebrow, { color: palette.primary }]}>HOC Connect</Text>
+          <Text style={[styles.eyebrow, { color: palette.primary }]}>HOC Elite Wheels</Text>
           <Text style={[styles.heading, { color: palette.primary }]}>Driver foundation</Text>
           <Text style={[styles.body, { color: palette.primary }]}>Mobile surface scaffold</Text>
         </View>
@@ -44,8 +44,10 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   eyebrow: {
-    fontFamily: 'Inter_600SemiBold',
-    fontSize: 13,
+    fontFamily: 'MrDafoe_400Regular',
+    fontSize: 34,
+    letterSpacing: -0.8,
+    lineHeight: 42,
   },
   heading: {
     fontFamily: 'Inter_700Bold',

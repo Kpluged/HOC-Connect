@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { Button, ButtonLink } from "@/components/ui/button";
+import { BrandWordmark } from "@/components/ui/brand-wordmark";
 import { Chip } from "@/components/ui/chip";
 import { ConfigStepRail } from "@/components/ui/config-step-rail";
 import { DataTable } from "@/components/ui/data-table";
@@ -29,7 +30,7 @@ export default function StyleguidePage() {
     <main className="bg-canvas" data-room="dark">
       <SiteHeader />
       <header className="page-shell room-enter py-24">
-        <p className="text-sm text-contrast-medium">HOC Connect</p>
+        <BrandWordmark className="text-3xl leading-none text-contrast-medium" />
         <h1 className="mt-6 max-w-[9ch] text-[clamp(4rem,10vw,8rem)] font-semibold leading-[0.86] tracking-[-0.06em]">
           Interface system
         </h1>

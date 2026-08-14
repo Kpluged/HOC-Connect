@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { BrandLockup } from "@/components/ui/brand-lockup";
 import { BrandMark } from "@/components/ui/brand-mark";
+import { BrandWordmark } from "@/components/ui/brand-wordmark";
 import { OverlayNav } from "@/components/ui/overlay-nav";
 
 export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
@@ -14,13 +15,13 @@ export function SiteHeader({ overlay = false }: { overlay?: boolean }) {
             <OverlayNav tone="inverse" />
           </div>
           <Link
-            aria-label="HOC Connect home"
-            className="hoc-wordmark justify-self-center whitespace-nowrap text-[clamp(1.85rem,3vw,2.8rem)] leading-none tracking-[-0.045em] text-white"
+            aria-label="HOC Elite Wheels home"
+            className="justify-self-center"
             href="/"
           >
-            HOC Connect
+            <BrandWordmark className="whitespace-nowrap text-[clamp(1.65rem,3vw,2.8rem)] leading-none tracking-[-0.045em] text-white" />
           </Link>
-          <Link aria-label="HOC Connect home" className="inline-flex min-h-11 items-center justify-self-end" href="/">
+          <Link aria-label="HOC Elite Wheels home" className="inline-flex min-h-11 items-center justify-self-end" href="/">
             <BrandMark className="h-9" priority size="small" />
           </Link>
         </div>

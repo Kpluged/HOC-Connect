@@ -6,7 +6,7 @@ import { SiteHeader } from "@/components/ui/site-header";
 import { vehicles } from "@/features/catalogue/data";
 
 export const metadata: Metadata = {
-  description: "Explore the current HOC Connect electric vehicle catalogue direction.",
+  description: "Explore the current HOC Elite Wheels electric vehicle catalogue direction.",
   title: "Vehicles",
 };
 

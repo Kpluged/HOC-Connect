@@ -21,7 +21,7 @@ export async function generateMetadata({
   if (!vehicle) return {};
 
   return {
-    description: `${vehicle.name} catalogue detail for HOC Connect. Specifications remain pending confirmation.`,
+    description: `${vehicle.name} catalogue detail for HOC Elite Wheels. Specifications remain pending confirmation.`,
     title: vehicle.name,
   };
 }
@@ -73,7 +73,7 @@ export default async function VehicleDetailPage({
         </div>
 
         <div className="page-shell relative flex min-h-[calc(100dvh-8.5rem)] flex-col items-center pb-16 pt-12 text-center lg:pb-20 lg:pt-16">
-          <p className="relative z-10 text-xs font-semibold uppercase tracking-[0.2em] text-white/70">HOC Connect vehicle catalogue</p>
+          <p className="relative z-10 text-xs font-semibold uppercase tracking-[0.2em] text-white/70">HOC Elite Wheels vehicle catalogue</p>
           <div className="relative z-10 -mt-1 h-[clamp(19rem,46vw,38rem)] w-full max-w-6xl sm:-mt-8">
             <Image
               alt={`${vehicle.name} electric vehicle product cut-out`}

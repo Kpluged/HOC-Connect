@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { BrandWordmark } from "@/components/ui/brand-wordmark";
 import { vehicles } from "@/features/catalogue/data";
 
 const navigation = [
@@ -227,8 +228,11 @@ export function OverlayNav({ tone = "default" }: { tone?: "default" | "inverse" 
                       ))}
                     </ul>
                   </nav>
-                  <Link className="mt-auto inline-flex min-h-12 items-center justify-between rounded-card px-5 text-sm font-semibold hover:bg-surface" href="/" onClick={close}>
-                    HOC Connect home
+                  <Link aria-label="HOC Elite Wheels home" className="mt-auto inline-flex min-h-12 items-center justify-between rounded-card px-5 hover:bg-surface" href="/" onClick={close}>
+                    <span className="inline-flex items-baseline gap-2">
+                      <BrandWordmark className="text-[1.55rem] leading-none tracking-[-0.04em]" />
+                      <span className="text-sm font-semibold">home</span>
+                    </span>
                     <span aria-hidden="true">›</span>
                   </Link>
                 </motion.section>
