@@ -1,0 +1,29 @@
+# dependencies
+node_modules/
+
+# builds
+.next/
+dist/
+.turbo/
+.expo/
+web-build/
+*.tsbuildinfo
+
+# environment
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# tests and coverage
+coverage/
+playwright-report/
+test-results/
+
+# local tooling
+.DS_Store
+*.log
+
+# generated native projects
+apps/driver/android/
+apps/driver/ios/

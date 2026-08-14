@@ -1,0 +1,198 @@
+@import "tailwindcss";
+@import "@hoc/design-tokens/tokens.css";
+@import "lenis/dist/lenis.css";
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-frosted: var(--frosted);
+  --color-scrim: var(--scrim);
+  --color-primary: var(--primary);
+  --color-contrast-higher: var(--contrast-higher);
+  --color-contrast-high: var(--contrast-high);
+  --color-contrast-medium: var(--contrast-medium);
+  --color-contrast-low: var(--contrast-low);
+  --color-contrast-lower: var(--contrast-lower);
+  --color-signal: var(--signal);
+  --color-on-signal: var(--on-signal);
+  --color-focus: var(--focus);
+  --font-sans: var(--font-inter);
+  --radius-field: var(--radius-field);
+  --radius-card: var(--radius-card);
+  --radius-control: var(--radius-control);
+  --ease-engineered: var(--ease-engineered);
+}
+
+* {
+  border-color: var(--contrast-low);
+}
+
+html {
+  background: var(--canvas);
+  scroll-behavior: auto;
+}
+
+body {
+  min-width: 20rem;
+  background: var(--canvas);
+  color: var(--primary);
+  font-family: var(--font-inter), Inter, Arial, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+.hoc-wordmark {
+  font-family: var(--font-hoc-wordmark), cursive;
+  font-synthesis: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.menu-control:focus-visible {
+  outline-color: currentColor;
+}
+
+.menu-scroll-region {
+  scrollbar-color: var(--contrast-medium) transparent;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+}
+
+.menu-scroll-region::-webkit-scrollbar {
+  width: 0.375rem;
+}
+
+.menu-scroll-region::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.menu-scroll-region::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: var(--contrast-medium);
+}
+
+.hero-atmosphere {
+  background:
+    radial-gradient(ellipse at 17% 38%, rgb(255 255 255 / 0.12), transparent 34%),
+    radial-gradient(ellipse at 73% 20%, rgb(255 255 255 / 0.08), transparent 31%),
+    radial-gradient(ellipse at 58% 72%, rgb(74 82 92 / 0.2), transparent 38%),
+    linear-gradient(118deg, #020305 0%, #0c0f13 46%, #030406 100%);
+}
+
+.hero-vehicle-stage::before,
+.hero-vehicle-stage::after {
+  position: absolute;
+  left: 50%;
+  z-index: 0;
+  content: "";
+  transform: translateX(-50%);
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.hero-vehicle-stage::before {
+  bottom: 7.5%;
+  width: 76%;
+  height: 7%;
+  background: rgb(0 0 0 / 0.32);
+  filter: blur(24px);
+}
+
+.hero-vehicle-stage::after {
+  bottom: 8.25%;
+  width: 55%;
+  height: 3.2%;
+  background: rgb(0 0 0 / 0.48);
+  filter: blur(9px);
+}
+
+::selection {
+  background: var(--contrast-low);
+  color: var(--primary);
+}
+
+.page-shell {
+  width: min(100%, var(--content-max));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.room-enter {
+  animation: room-enter var(--duration-enter) var(--ease-engineered) both;
+}
+
+.signal-pulse::after {
+  animation: signal-pulse 1.8s var(--ease-engineered) infinite;
+}
+
+.overlay-panel[open] {
+  animation: overlay-wipe var(--duration-overlay) var(--ease-engineered) both;
+}
+
+.overlay-panel::backdrop {
+  background: var(--scrim);
+  animation: overlay-fade var(--duration-overlay) ease-out both;
+}
+
+@keyframes room-enter {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+}
+
+@keyframes overlay-wipe {
+  from {
+    opacity: 0;
+    transform: translateX(2rem);
+  }
+}
+
+@keyframes overlay-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes signal-pulse {
+  50% {
+    opacity: 0.28;
+    transform: scale(1.8);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+
+  .room-enter {
+    transform: none;
+  }
+}
