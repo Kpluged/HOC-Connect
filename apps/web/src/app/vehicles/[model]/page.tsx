@@ -3,10 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { AnimatedSpecBlock } from "@/components/ui/animated-spec-block";
 import { MarketingFooter } from "@/components/marketing/marketing-footer";
 import { ButtonLink } from "@/components/ui/button";
 import { SiteHeader } from "@/components/ui/site-header";
-import { getVehicle, vehicles } from "@/features/catalogue/data";
+import { getVehicle, vehicles, type Vehicle } from "@/features/catalogue/data";
 
 export function generateStaticParams() {
   return vehicles.map((vehicle) => ({ model: vehicle.slug }));
@@ -21,16 +22,29 @@ export async function generateMetadata({
   if (!vehicle) return {};
 
   return {
-    description: `${vehicle.name} catalogue detail for HOC Elite Wheels. Specifications remain pending confirmation.`,
+    description: `${vehicle.name} catalogue detail for HOC Elite Wheels. Manufacturer specifications shown; HOC pricing and availability remain pending confirmation.`,
     title: vehicle.name,
   };
 }
 
-const specs = [
-  { label: "Estimated range", value: "Pending" },
-  { label: "Battery", value: "Pending" },
-  { label: "Seating", value: "Pending" },
-];
+function buildSpecs(vehicle: Vehicle) {
+  const { specs } = vehicle;
+  return [
+    {
+      caption: `${specs.rangeBasis} combined estimate, manufacturer-published.`,
+      label: "Electric range combined",
+      unit: "km",
+      value: specs.rangeKm,
+    },
+    { decimals: 1, label: "Battery capacity", unit: "kWh", value: specs.batteryKwh },
+    { label: "Power", unit: "kW", value: specs.powerKw },
+    specs.accelSeconds > 0
+      ? { decimals: 1, label: "Acceleration 0–100 km/h", unit: "s", value: specs.accelSeconds }
+      : null,
+    specs.topSpeedKmh > 0 ? { label: "Top speed", unit: "km/h", value: specs.topSpeedKmh } : null,
+    { label: "Seating", unit: "seats", value: specs.seats },
+  ].filter((spec) => spec !== null);
+}
 
 export default async function VehicleDetailPage({
   params,
@@ -86,10 +100,10 @@ export default async function VehicleDetailPage({
             />
           </div>
           <div className="relative z-10 -mt-4 flex max-w-2xl flex-col items-center sm:-mt-12 lg:-mt-16">
-            <span className="rounded-control bg-surface px-4 py-1.5 text-xs font-semibold">Electric</span>
+            <span className="rounded-control bg-surface px-4 py-1.5 text-xs font-semibold">Electric · {vehicle.manufacturer}</span>
             <h1 className="mt-5 text-[clamp(3.5rem,7vw,7rem)] font-semibold leading-[0.88] tracking-[-0.06em]">{vehicle.name}</h1>
             <p className="mt-6 max-w-[48ch] text-base leading-7 text-contrast-high">
-              This vehicle is presented as a catalogue direction. Final model designation, commercial terms, and technical data remain pending HOC confirmation.
+              {vehicle.category}. Manufacturer specifications below are {vehicle.manufacturer}&apos;s published figures for the global-market configuration; HOC&apos;s confirmed pricing, availability, and procurement trim for Lagos remain pending.
             </p>
             <ButtonLink className="mt-8" href={`/configure/city?vehicle=${vehicle.slug}`} variant="signal">Add to configuration</ButtonLink>
           </div>
@@ -105,18 +119,20 @@ export default async function VehicleDetailPage({
                 Data without guesswork.
               </h2>
             </div>
-            <dl className="grid border-t border-contrast-low sm:grid-cols-3 lg:col-span-8">
-              {specs.map((spec) => (
-                <div className="border-b border-contrast-low py-7 sm:border-r sm:px-6 sm:first:pl-0 sm:last:border-r-0" key={spec.label}>
-                  <dt className="text-sm text-contrast-medium">{spec.label}</dt>
-                  <dd className="mt-14 text-2xl font-semibold">{spec.value}</dd>
-                </div>
+            <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:col-span-8 lg:grid-cols-3">
+              {buildSpecs(vehicle).map((spec) => (
+                <AnimatedSpecBlock
+                  caption={spec.caption}
+                  decimals={spec.decimals}
+                  key={spec.label}
+                  label={spec.label}
+                  unit={spec.unit}
+                  value={spec.value}
+                />
               ))}
-            </dl>
+            </div>
           </div>
-          <p className="mt-8 text-sm leading-6 text-contrast-medium">
-            No provisional specifications are displayed. Confirmed values can be connected to the catalogue data model in a later milestone.
-          </p>
+          <p className="mt-10 max-w-[70ch] text-sm leading-6 text-contrast-medium">{vehicle.sourceNote}</p>
         </div>
       </section>
 

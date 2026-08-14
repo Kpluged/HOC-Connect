@@ -88,41 +88,6 @@ a {
   background: var(--contrast-medium);
 }
 
-.hero-atmosphere {
-  background:
-    radial-gradient(ellipse at 17% 38%, rgb(255 255 255 / 0.12), transparent 34%),
-    radial-gradient(ellipse at 73% 20%, rgb(255 255 255 / 0.08), transparent 31%),
-    radial-gradient(ellipse at 58% 72%, rgb(74 82 92 / 0.2), transparent 38%),
-    linear-gradient(118deg, #020305 0%, #0c0f13 46%, #030406 100%);
-}
-
-.hero-vehicle-stage::before,
-.hero-vehicle-stage::after {
-  position: absolute;
-  left: 50%;
-  z-index: 0;
-  content: "";
-  transform: translateX(-50%);
-  border-radius: 999px;
-  pointer-events: none;
-}
-
-.hero-vehicle-stage::before {
-  bottom: 7.5%;
-  width: 76%;
-  height: 7%;
-  background: rgb(0 0 0 / 0.32);
-  filter: blur(24px);
-}
-
-.hero-vehicle-stage::after {
-  bottom: 8.25%;
-  width: 55%;
-  height: 3.2%;
-  background: rgb(0 0 0 / 0.48);
-  filter: blur(9px);
-}
-
 ::selection {
   background: var(--contrast-low);
   color: var(--primary);

@@ -21,14 +21,14 @@ export default function VehiclesPage() {
             Electric vehicles, clearly considered.
           </h1>
           <p className="max-w-[42ch] text-base leading-7 text-contrast-high lg:col-span-4">
-            The models below establish the catalogue direction. Names, performance data, pricing, and availability remain pending HOC confirmation.
+            Manufacturer specifications are shown for each model below. HOC&apos;s pricing, availability, and confirmed procurement trim for Lagos remain pending.
           </p>
         </div>
       </header>
       <section className="page-shell py-16 lg:py-24">
         <div className="mb-12 flex flex-wrap items-center justify-between gap-4 border-b border-contrast-low pb-5">
           <p className="text-sm font-semibold">All vehicles</p>
-          <p className="tabular-nums text-sm text-contrast-medium">{vehicles.length} catalogue placeholders</p>
+          <p className="tabular-nums text-sm text-contrast-medium">{vehicles.length} vehicles</p>
         </div>
         <div className="grid gap-x-7 gap-y-16 sm:grid-cols-2">
           {vehicles.map((vehicle) => (

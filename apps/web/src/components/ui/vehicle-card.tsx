@@ -8,7 +8,7 @@ export function VehicleCard({
   href,
   image,
   name,
-  status = "Specifications pending",
+  status = "Pricing pending",
 }: {
   detail: string;
   href: string;

@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import { MarketingFooter } from "@/components/marketing/marketing-footer";
+import { HeroVideo } from "@/components/motion/hero-video";
 import { ScrollReveal } from "@/components/motion/scroll-reveal";
 import { ButtonLink } from "@/components/ui/button";
 import { SectionHeader } from "@/components/ui/section-header";
@@ -32,40 +33,31 @@ export default function Home() {
     <main className="min-h-dvh bg-canvas" data-room="light">
       <SiteHeader overlay />
 
-      <section className="relative isolate overflow-hidden border-b border-contrast-low bg-canvas">
-        <div className="hero-atmosphere absolute inset-x-0 top-0 h-[clamp(30rem,64dvh,52rem)] overflow-hidden bg-[#07090c]">
-          <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-black/25 to-black/72" />
-        </div>
+      <section className="relative isolate min-h-[100svh] overflow-hidden border-b border-contrast-low bg-[#07090c]">
+        <HeroVideo
+          className="absolute inset-0"
+          poster="/vehicles/hero-saloon-side-v1.png"
+          src="/hero/home-hero.mp4"
+        />
+        <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/10 to-black/75" />
 
-        <div className="page-shell relative flex min-h-dvh flex-col items-center pb-16 pt-36 text-center sm:pt-40 lg:pb-20 lg:pt-44">
-          <div className="room-enter relative z-10 text-white">
+        <div className="page-shell relative flex min-h-[100svh] flex-col items-center justify-center pb-16 pt-36 text-center text-white sm:pt-40 lg:pb-20 lg:pt-44">
+          <div className="room-enter relative z-10">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/68">Electric ride-service platform</p>
             <h1 className="mt-5 max-w-[14ch] text-[clamp(3.4rem,7vw,7.5rem)] font-semibold leading-[0.88] tracking-[-0.06em]">
               Build the fleet. Run the service.
             </h1>
           </div>
 
-          <div className="hero-vehicle-stage room-enter relative z-10 -mt-1 h-[clamp(18rem,38vw,38rem)] w-[min(84rem,112vw)] max-w-none sm:-mt-5 lg:-mt-8">
-            <Image
-              alt="Unbranded electric grand-touring saloon shown in side profile"
-              className="relative z-10 object-contain object-bottom drop-shadow-[0_16px_10px_rgba(0,0,0,0.16)]"
-              fill
-              loading="eager"
-              quality={90}
-              sizes="(min-width: 1536px) 1344px, 112vw"
-              src="/vehicles/hero-saloon-side-v1.png"
-            />
-          </div>
-
-          <div className="relative z-10 -mt-3 flex max-w-2xl flex-col items-center sm:-mt-8 lg:-mt-12">
-            <p className="text-lg leading-8 text-contrast-high">
+          <div className="room-enter relative z-10 mt-10 flex max-w-2xl flex-col items-center">
+            <p className="text-lg leading-8 text-white/85">
               Choose the city, shape a fleet, apply, and manage dispatch from one connected space.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <ButtonLink href="/configure/city" variant="signal">Configure a fleet</ButtonLink>
-              <ButtonLink href="/vehicles" variant="outline">Explore vehicles</ButtonLink>
+              <ButtonLink href="/vehicles" variant="glass">Explore vehicles</ButtonLink>
             </div>
-            <p className="mt-6 text-xs text-contrast-medium">Vehicle specifications and availability pending HOC confirmation.</p>
+            <p className="mt-6 text-xs text-white/55">Vehicle specifications and availability pending HOC confirmation.</p>
           </div>
         </div>
       </section>
@@ -74,11 +66,11 @@ export default function Home() {
         <ScrollReveal>
           <SectionHeader
             eyebrow="Current catalogue direction"
-            heading="Four vehicle formats. One operating system."
+            heading="City, everyday, and premium. One operating system."
             number="01"
           />
           <div className="mt-14 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
-            {vehicles.map((vehicle) => (
+            {vehicles.slice(0, 4).map((vehicle) => (
               <VehicleCard
                 detail={vehicle.category}
                 href={`/vehicles/${vehicle.slug}`}

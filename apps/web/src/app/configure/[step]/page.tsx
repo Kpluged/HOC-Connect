@@ -126,7 +126,7 @@ function StepFields({ query, step }: { query: Query; step: ConfigurationStep }) 
       <fieldset>
         <legend className="text-sm font-semibold">Vehicle mix</legend>
         <p className="mt-2 text-sm leading-6 text-contrast-medium">
-          Select one or more catalogue directions. Final models and specifications remain pending.
+          Select one or more of the vehicles below. HOC&apos;s confirmed pricing and Lagos availability remain pending.
         </p>
         <div className="mt-6 grid gap-3 sm:grid-cols-2">
           {vehicles.map((vehicle) => (
