@@ -65,7 +65,7 @@ export default function Home() {
 
       <RoomTransition
         after={
-          <section className="py-24 text-primary lg:py-36" data-room="dark">
+          <section className="py-24 text-primary lg:py-36" data-room="dark" key="after">
             <div className="page-shell">
               <ScrollReveal>
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-contrast-medium">
@@ -91,7 +91,7 @@ export default function Home() {
           </section>
         }
         before={
-          <section className="page-shell py-24 lg:py-36">
+          <section className="page-shell py-24 lg:py-36" key="before">
             <ScrollReveal>
               <SectionHeader
                 eyebrow="Current catalogue direction"
