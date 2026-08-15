@@ -123,3 +123,31 @@ export const createOrderSchema = z.object({
   pricingNote: z.string().optional(),
   totalMinor: z.number().int().nonnegative(),
 });
+
+export const vehicleLifecycleStatusSchema = z.enum([
+  "allocated",
+  "delivered",
+  "active",
+]);
+
+export type VehicleLifecycleStatus = z.infer<typeof vehicleLifecycleStatusSchema>;
+
+/**
+ * VINs are staff-entered exactly once at allocation time (no reserve-then-
+ * attach flow) - normalized to uppercase/trimmed here (single source of
+ * truth) so the DB's plain unique index can't be bypassed by case
+ * variation alone.
+ */
+export const vinSchema = z
+  .string()
+  .trim()
+  .min(5, "VIN looks too short")
+  .max(32, "VIN looks too long")
+  .transform((value) => value.toUpperCase());
+
+export const allocateVehicleSchema = z.object({
+  orderId: z.uuid(),
+  plate: z.string().trim().min(1).optional(),
+  vehicleModelSlug: z.string().min(1),
+  vin: vinSchema,
+});

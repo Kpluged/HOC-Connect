@@ -11,11 +11,13 @@ import { Field, SelectField } from "@/components/ui/field";
 import { SiteHeader } from "@/components/ui/site-header";
 import { StickySummary } from "@/components/ui/sticky-summary";
 import { Textarea } from "@/components/ui/textarea";
+import { getVehicle, vehicles as catalogueVehicles } from "@/features/catalogue/data";
 import { formatMoney } from "@/lib/money";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getServerCaller } from "@/server/trpc/caller";
 
 import { addStaffNote, decideApplication } from "../actions";
+import { activateVehicle, allocateVehicle, markVehicleDelivered } from "../fleet-actions";
 import {
   cancelOrder,
   createOrder,
@@ -34,6 +36,12 @@ const statusVariant = {
   draft: "neutral",
   submitted: "selected",
   under_review: "selected",
+} as const;
+
+const vehicleStatusVariant = {
+  active: "live",
+  allocated: "neutral",
+  delivered: "selected",
 } as const;
 
 export default async function AdminApplicationDetailPage({
@@ -82,6 +90,10 @@ export default async function AdminApplicationDetailPage({
       ? await caller.orders.getByApplicationId({ applicationId: application.id })
       : null;
   const orderDetail = order ? await caller.orders.getById({ id: order.id }) : null;
+  const allocatedVehicles =
+    order?.status === "paid_in_full"
+      ? await caller.vehicles.listByOrganization({ organizationId: application.organizationId })
+      : [];
 
   return (
     <main className="min-h-dvh bg-canvas" data-room="light">
@@ -373,6 +385,102 @@ export default async function AdminApplicationDetailPage({
                 />
               </div>
             ) : null}
+          </div>
+        </section>
+      ) : null}
+
+      {order?.status === "paid_in_full" ? (
+        <section className="border-t border-contrast-low">
+          <div className="page-shell grid gap-12 py-16 lg:grid-cols-12 lg:py-24">
+            <header className="min-w-0 lg:col-span-5">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-contrast-medium">
+                Fleet
+              </p>
+              <h2 className="mt-5 text-[clamp(2rem,4vw,3rem)] font-semibold leading-[0.95] tracking-[-0.045em]">
+                Allocate a vehicle
+              </h2>
+              <form action={allocateVehicle} className="mt-8 grid max-w-md gap-6">
+                <input name="applicationId" type="hidden" value={application.id} />
+                <input name="orderId" type="hidden" value={order.id} />
+                <SelectField id="vehicleModelSlug" label="Model" name="vehicleModelSlug" required>
+                  {catalogueVehicles.map((vehicle) => (
+                    <option key={vehicle.slug} value={vehicle.slug}>
+                      {vehicle.name}
+                    </option>
+                  ))}
+                </SelectField>
+                <Field
+                  description="Required - each vehicle's VIN must be unique."
+                  id="vin"
+                  label="VIN"
+                  name="vin"
+                  required
+                />
+                <Field
+                  description="Optional - can be added once known."
+                  id="plate"
+                  label="Plate"
+                  name="plate"
+                />
+                <Button className="justify-self-start" type="submit" variant="signal">
+                  Allocate vehicle
+                </Button>
+              </form>
+            </header>
+
+            <div className="min-w-0 lg:col-span-7">
+              <p className="text-sm font-semibold">Allocated vehicles</p>
+              {allocatedVehicles.length > 0 ? (
+                <div className="mt-4">
+                  <DataTable
+                    caption="Vehicles allocated to this organization"
+                    columns={[
+                      { key: "model", label: "Model" },
+                      { key: "vin", label: "VIN" },
+                      { key: "plate", label: "Plate" },
+                      { key: "status", label: "Status" },
+                      { align: "right", key: "action", label: "" },
+                    ]}
+                    rows={allocatedVehicles.map((vehicle) => ({
+                      id: vehicle.id,
+                      values: {
+                        action:
+                          vehicle.status === "allocated" ? (
+                            <form action={markVehicleDelivered}>
+                              <input name="applicationId" type="hidden" value={application.id} />
+                              <input name="vehicleId" type="hidden" value={vehicle.id} />
+                              <Button type="submit" variant="outline">
+                                Mark delivered
+                              </Button>
+                            </form>
+                          ) : vehicle.status === "delivered" ? (
+                            <form action={activateVehicle}>
+                              <input name="applicationId" type="hidden" value={application.id} />
+                              <input name="vehicleId" type="hidden" value={vehicle.id} />
+                              <Button type="submit" variant="outline">
+                                Activate
+                              </Button>
+                            </form>
+                          ) : null,
+                        model:
+                          getVehicle(vehicle.vehicleModelSlug)?.name ?? vehicle.vehicleModelSlug,
+                        plate: vehicle.plate || "-",
+                        status: (
+                          <Chip variant={vehicleStatusVariant[vehicle.status]}>
+                            {vehicle.status}
+                          </Chip>
+                        ),
+                        vin: vehicle.vin,
+                      },
+                    }))}
+                  />
+                </div>
+              ) : (
+                <p className="mt-4 text-sm text-contrast-medium">
+                  No vehicles allocated yet.
+                </p>
+              )}
+            </div>
           </div>
         </section>
       ) : null}

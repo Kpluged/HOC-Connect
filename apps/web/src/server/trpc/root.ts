@@ -1,4 +1,5 @@
 import { applicationsRouter } from "./routers/applications";
+import { fleetRouter } from "./routers/fleet";
 import { ordersRouter } from "./routers/orders";
 import { organizationsRouter } from "./routers/organizations";
 import { profileRouter } from "./routers/profile";
@@ -9,6 +10,7 @@ export const appRouter = router({
   orders: ordersRouter,
   organizations: organizationsRouter,
   profile: profileRouter,
+  vehicles: fleetRouter,
 });
 
 export type AppRouter = typeof appRouter;

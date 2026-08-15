@@ -43,6 +43,12 @@ export const applicationDocumentStatus = app.enum(
   ["uploaded", "verified", "rejected"],
 );
 
+export const vehicleLifecycleStatus = app.enum("vehicle_lifecycle_status", [
+  "allocated",
+  "delivered",
+  "active",
+]);
+
 export const orderStatus = app.enum("order_status", [
   "draft",
   "deposit_pending",

@@ -1,6 +1,6 @@
 {
-  "id": "92eab450-42a0-44bd-8f06-23bffd3cb126",
-  "prevId": "999ad54c-102b-4adf-bb77-7cb8ac7b1aa4",
+  "id": "8e2c6c09-d0c1-49c2-b4c5-d8efb9db3e9e",
+  "prevId": "2a585290-0d19-4d71-89b4-bb3c79d99607",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -447,6 +447,624 @@
         }
       },
       "checkConstraints": {},
+      "isRLSEnabled": true
+    },
+    "app.orders": {
+      "name": "orders",
+      "schema": "app",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "application_id": {
+          "name": "application_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "order_status",
+          "typeSchema": "app",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'draft'"
+        },
+        "total_minor": {
+          "name": "total_minor",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "deposit_minor": {
+          "name": "deposit_minor",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "currency": {
+          "name": "currency",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "pricing_note": {
+          "name": "pricing_note",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_by_user_id": {
+          "name": "created_by_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "terms_accepted_at": {
+          "name": "terms_accepted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "terms_accepted_by_user_id": {
+          "name": "terms_accepted_by_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "orders_active_application_idx": {
+          "name": "orders_active_application_idx",
+          "columns": [
+            {
+              "expression": "application_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"app\".\"orders\".\"status\" <> 'cancelled'",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "orders_organization_id_organizations_id_fk": {
+          "name": "orders_organization_id_organizations_id_fk",
+          "tableFrom": "orders",
+          "tableTo": "organizations",
+          "schemaTo": "app",
+          "columnsFrom": [
+            "organization_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "orders_application_id_applications_id_fk": {
+          "name": "orders_application_id_applications_id_fk",
+          "tableFrom": "orders",
+          "tableTo": "applications",
+          "schemaTo": "app",
+          "columnsFrom": [
+            "application_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "orders_created_by_user_id_users_id_fk": {
+          "name": "orders_created_by_user_id_users_id_fk",
+          "tableFrom": "orders",
+          "tableTo": "users",
+          "schemaTo": "auth",
+          "columnsFrom": [
+            "created_by_user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "orders_terms_accepted_by_user_id_users_id_fk": {
+          "name": "orders_terms_accepted_by_user_id_users_id_fk",
+          "tableFrom": "orders",
+          "tableTo": "users",
+          "schemaTo": "auth",
+          "columnsFrom": [
+            "terms_accepted_by_user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "tenant and staff can select orders": {
+          "name": "tenant and staff can select orders",
+          "as": "PERMISSIVE",
+          "for": "SELECT",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(select private.can_view_org(\"app\".\"orders\".\"organization_id\"))"
+        },
+        "staff can insert orders": {
+          "name": "staff can insert orders",
+          "as": "PERMISSIVE",
+          "for": "INSERT",
+          "to": [
+            "authenticated"
+          ],
+          "withCheck": "(select private.is_hoc_staff())"
+        },
+        "staff can update orders": {
+          "name": "staff can update orders",
+          "as": "PERMISSIVE",
+          "for": "UPDATE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(select private.is_hoc_staff())",
+          "withCheck": "(select private.is_hoc_staff())"
+        },
+        "owner can accept order terms while deposit is due": {
+          "name": "owner can accept order terms while deposit is due",
+          "as": "PERMISSIVE",
+          "for": "UPDATE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(select private.has_org_role(\"app\".\"orders\".\"organization_id\", array['owner']::text[])) and \"app\".\"orders\".\"status\" = 'deposit_pending'",
+          "withCheck": "(select private.has_org_role(\"app\".\"orders\".\"organization_id\", array['owner']::text[])) and \"app\".\"orders\".\"status\" = 'deposit_pending'"
+        }
+      },
+      "checkConstraints": {
+        "orders_total_non_negative": {
+          "name": "orders_total_non_negative",
+          "value": "\"app\".\"orders\".\"total_minor\" >= 0"
+        },
+        "orders_deposit_within_total": {
+          "name": "orders_deposit_within_total",
+          "value": "\"app\".\"orders\".\"deposit_minor\" >= 0 and \"app\".\"orders\".\"deposit_minor\" <= \"app\".\"orders\".\"total_minor\""
+        },
+        "orders_currency_format": {
+          "name": "orders_currency_format",
+          "value": "char_length(\"app\".\"orders\".\"currency\") = 3"
+        }
+      },
+      "isRLSEnabled": true
+    },
+    "app.payments": {
+      "name": "payments",
+      "schema": "app",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "order_id": {
+          "name": "order_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "kind": {
+          "name": "kind",
+          "type": "payment_kind",
+          "typeSchema": "app",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "payment_status",
+          "typeSchema": "app",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'pending'"
+        },
+        "amount_minor": {
+          "name": "amount_minor",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "currency": {
+          "name": "currency",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "provider_reference": {
+          "name": "provider_reference",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "provider_transaction_id": {
+          "name": "provider_transaction_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "provider_metadata": {
+          "name": "provider_metadata",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "initiated_by_user_id": {
+          "name": "initiated_by_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "payments_provider_reference_idx": {
+          "name": "payments_provider_reference_idx",
+          "columns": [
+            {
+              "expression": "provider_reference",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "payments_succeeded_order_kind_idx": {
+          "name": "payments_succeeded_order_kind_idx",
+          "columns": [
+            {
+              "expression": "order_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "kind",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"app\".\"payments\".\"status\" = 'succeeded'",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "payments_order_id_orders_id_fk": {
+          "name": "payments_order_id_orders_id_fk",
+          "tableFrom": "payments",
+          "tableTo": "orders",
+          "schemaTo": "app",
+          "columnsFrom": [
+            "order_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "payments_organization_id_organizations_id_fk": {
+          "name": "payments_organization_id_organizations_id_fk",
+          "tableFrom": "payments",
+          "tableTo": "organizations",
+          "schemaTo": "app",
+          "columnsFrom": [
+            "organization_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "payments_initiated_by_user_id_users_id_fk": {
+          "name": "payments_initiated_by_user_id_users_id_fk",
+          "tableFrom": "payments",
+          "tableTo": "users",
+          "schemaTo": "auth",
+          "columnsFrom": [
+            "initiated_by_user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "tenant and staff can select payments": {
+          "name": "tenant and staff can select payments",
+          "as": "PERMISSIVE",
+          "for": "SELECT",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(select private.can_view_org(\"app\".\"payments\".\"organization_id\"))"
+        },
+        "owner or staff can insert payment attempts": {
+          "name": "owner or staff can insert payment attempts",
+          "as": "PERMISSIVE",
+          "for": "INSERT",
+          "to": [
+            "authenticated"
+          ],
+          "withCheck": "((select private.is_hoc_staff()) or (select private.has_org_role(\"app\".\"payments\".\"organization_id\", array['owner']::text[]))) and \"app\".\"payments\".\"status\" = 'pending'"
+        }
+      },
+      "checkConstraints": {
+        "payments_amount_non_negative": {
+          "name": "payments_amount_non_negative",
+          "value": "\"app\".\"payments\".\"amount_minor\" >= 0"
+        },
+        "payments_currency_format": {
+          "name": "payments_currency_format",
+          "value": "char_length(\"app\".\"payments\".\"currency\") = 3"
+        }
+      },
+      "isRLSEnabled": true
+    },
+    "app.vehicles": {
+      "name": "vehicles",
+      "schema": "app",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "order_id": {
+          "name": "order_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "vehicle_model_slug": {
+          "name": "vehicle_model_slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "vin": {
+          "name": "vin",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "plate": {
+          "name": "plate",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "vehicle_lifecycle_status",
+          "typeSchema": "app",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'allocated'"
+        },
+        "allocated_by_user_id": {
+          "name": "allocated_by_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "allocated_at": {
+          "name": "allocated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "delivered_at": {
+          "name": "delivered_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "activated_at": {
+          "name": "activated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "vehicles_vin_idx": {
+          "name": "vehicles_vin_idx",
+          "columns": [
+            {
+              "expression": "vin",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "vehicles_organization_id_organizations_id_fk": {
+          "name": "vehicles_organization_id_organizations_id_fk",
+          "tableFrom": "vehicles",
+          "tableTo": "organizations",
+          "schemaTo": "app",
+          "columnsFrom": [
+            "organization_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "vehicles_order_id_orders_id_fk": {
+          "name": "vehicles_order_id_orders_id_fk",
+          "tableFrom": "vehicles",
+          "tableTo": "orders",
+          "schemaTo": "app",
+          "columnsFrom": [
+            "order_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "vehicles_allocated_by_user_id_users_id_fk": {
+          "name": "vehicles_allocated_by_user_id_users_id_fk",
+          "tableFrom": "vehicles",
+          "tableTo": "users",
+          "schemaTo": "auth",
+          "columnsFrom": [
+            "allocated_by_user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "tenant and staff can select vehicles": {
+          "name": "tenant and staff can select vehicles",
+          "as": "PERMISSIVE",
+          "for": "SELECT",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(select private.can_view_org(\"app\".\"vehicles\".\"organization_id\"))"
+        },
+        "staff can insert vehicles for paid orders": {
+          "name": "staff can insert vehicles for paid orders",
+          "as": "PERMISSIVE",
+          "for": "INSERT",
+          "to": [
+            "authenticated"
+          ],
+          "withCheck": "(select private.is_hoc_staff()) and exists (\n          select 1 from \"app\".\"orders\" o\n          where o.id = \"app\".\"vehicles\".\"order_id\" and o.status = 'paid_in_full'\n        )"
+        },
+        "staff can update vehicles": {
+          "name": "staff can update vehicles",
+          "as": "PERMISSIVE",
+          "for": "UPDATE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(select private.is_hoc_staff())",
+          "withCheck": "(select private.is_hoc_staff())"
+        }
+      },
+      "checkConstraints": {
+        "vehicles_vin_not_blank": {
+          "name": "vehicles_vin_not_blank",
+          "value": "char_length(btrim(\"app\".\"vehicles\".\"vin\")) > 0"
+        }
+      },
       "isRLSEnabled": true
     },
     "app.platform_roles": {
@@ -933,6 +1551,18 @@
         "disabled"
       ]
     },
+    "app.order_status": {
+      "name": "order_status",
+      "schema": "app",
+      "values": [
+        "draft",
+        "deposit_pending",
+        "deposit_paid",
+        "balance_pending",
+        "paid_in_full",
+        "cancelled"
+      ]
+    },
     "app.organization_role": {
       "name": "organization_role",
       "schema": "app",
@@ -953,6 +1583,23 @@
         "suspended"
       ]
     },
+    "app.payment_kind": {
+      "name": "payment_kind",
+      "schema": "app",
+      "values": [
+        "deposit",
+        "balance"
+      ]
+    },
+    "app.payment_status": {
+      "name": "payment_status",
+      "schema": "app",
+      "values": [
+        "pending",
+        "succeeded",
+        "failed"
+      ]
+    },
     "app.platform_role": {
       "name": "platform_role",
       "schema": "app",
@@ -967,6 +1614,15 @@
       "values": [
         "active",
         "revoked"
+      ]
+    },
+    "app.vehicle_lifecycle_status": {
+      "name": "vehicle_lifecycle_status",
+      "schema": "app",
+      "values": [
+        "allocated",
+        "delivered",
+        "active"
       ]
     }
   },

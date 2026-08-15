@@ -36,6 +36,13 @@
       "when": 1786821600000,
       "tag": "0011_fix_payments_insert_status_check",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1786824898803,
+      "tag": "0012_vehicles_table",
+      "breakpoints": true
     }
   ]
 }
