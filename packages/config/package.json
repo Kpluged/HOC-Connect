@@ -1,0 +1,22 @@
+{
+  "name": "@hoc/config",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./server": "./src/server.ts",
+    "./client": "./src/client.ts"
+  },
+  "scripts": {
+    "lint": "node node_modules/typescript/bin/tsc --noEmit",
+    "typecheck": "node node_modules/typescript/bin/tsc --noEmit"
+  },
+  "dependencies": {
+    "server-only": "0.0.1",
+    "zod": "4.1.12"
+  },
+  "devDependencies": {
+    "@types/node": "20.19.30",
+    "typescript": "5.9.3"
+  }
+}

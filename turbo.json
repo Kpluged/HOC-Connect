@@ -3,7 +3,17 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
+      "env": [
+        "NEXT_PUBLIC_SUPABASE_URL",
+        "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "DATABASE_URL",
+        "PREMBLY_ADAPTER_MODE",
+        "PREMBLY_BASE_URL",
+        "PREMBLY_API_KEY",
+        "PREMBLY_APP_ID"
+      ]
     },
     "dev": {
       "cache": false,
@@ -13,7 +23,17 @@
       "dependsOn": ["^lint"]
     },
     "typecheck": {
-      "dependsOn": ["^typecheck"]
+      "dependsOn": ["^typecheck"],
+      "env": [
+        "NEXT_PUBLIC_SUPABASE_URL",
+        "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "DATABASE_URL",
+        "PREMBLY_ADAPTER_MODE",
+        "PREMBLY_BASE_URL",
+        "PREMBLY_API_KEY",
+        "PREMBLY_APP_ID"
+      ]
     }
   }
 }

@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { MarketingFooter } from "@/components/marketing/marketing-footer";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonLink } from "@/components/ui/button";
+import { CheckboxGroup, RadioGroup } from "@/components/ui/radio-group";
 import { ConfigStepRail } from "@/components/ui/config-step-rail";
 import { Field } from "@/components/ui/field";
 import { SiteHeader } from "@/components/ui/site-header";
@@ -14,13 +15,13 @@ import {
   isConfigurationStep,
   type ConfigurationStep,
 } from "@/features/configurator/data";
+import { getSelectedVehicles, valueOf } from "@/features/configurator/query";
+import type { SearchParams } from "@/lib/search-params";
 
 export const metadata: Metadata = {
   description: "Shape a proposed HOC Elite Wheels fleet in six clear steps.",
   title: "Fleet configurator",
 };
-
-type Query = Record<string, string | string[] | undefined>;
 
 const editableKeys: Record<ConfigurationStep, string[]> = {
   city: ["city"],
@@ -31,25 +32,13 @@ const editableKeys: Record<ConfigurationStep, string[]> = {
   review: [],
 };
 
-function valueOf(query: Query, key: string) {
-  const value = query[key];
-  return Array.isArray(value) ? value[0] : value;
-}
-
-function valuesOf(query: Query, key: string) {
-  const value = query[key];
-  if (!value) return [];
-  return Array.isArray(value) ? value : [value];
-}
-
-function getSelectedVehicles(query: Query) {
-  const selected = valuesOf(query, "mix");
-  const initialVehicle = valueOf(query, "vehicle");
-  const slugs = selected.length > 0 ? selected : initialVehicle ? [initialVehicle] : [];
-  return vehicles.filter((vehicle) => slugs.includes(vehicle.slug));
-}
-
-function HiddenQueryFields({ query, step }: { query: Query; step: ConfigurationStep }) {
+function HiddenQueryFields({
+  query,
+  step,
+}: {
+  query: SearchParams;
+  step: ConfigurationStep;
+}) {
   const excluded = new Set(editableKeys[step]);
 
   return Object.entries(query).flatMap(([key, rawValue]) => {
@@ -61,33 +50,13 @@ function HiddenQueryFields({ query, step }: { query: Query; step: ConfigurationS
   });
 }
 
-function Choice({
-  defaultChecked,
-  description,
-  label,
-  name,
-  type = "radio",
-  value,
+function StepFields({
+  query,
+  step,
 }: {
-  defaultChecked?: boolean;
-  description: string;
-  label: string;
-  name: string;
-  type?: "checkbox" | "radio";
-  value: string;
+  query: SearchParams;
+  step: ConfigurationStep;
 }) {
-  return (
-    <label className="flex min-h-24 cursor-pointer items-start gap-4 border border-contrast-low bg-surface-raised p-5 hover:border-primary has-[:checked]:border-primary has-[:checked]:bg-surface">
-      <input className="mt-1 size-4 accent-[var(--signal)]" defaultChecked={defaultChecked} name={name} type={type} value={value} />
-      <span>
-        <span className="block font-semibold">{label}</span>
-        <span className="mt-2 block text-sm leading-6 text-contrast-medium">{description}</span>
-      </span>
-    </label>
-  );
-}
-
-function StepFields({ query, step }: { query: Query; step: ConfigurationStep }) {
   if (step === "city") {
     return (
       <Field
@@ -123,70 +92,60 @@ function StepFields({ query, step }: { query: Query; step: ConfigurationStep }) 
   if (step === "mix") {
     const selected = getSelectedVehicles(query).map((vehicle) => vehicle.slug);
     return (
-      <fieldset>
-        <legend className="text-sm font-semibold">Vehicle mix</legend>
-        <p className="mt-2 text-sm leading-6 text-contrast-medium">
-          Select one or more of the vehicles below. HOC&apos;s confirmed pricing and Lagos availability remain pending.
-        </p>
-        <div className="mt-6 grid gap-3 sm:grid-cols-2">
-          {vehicles.map((vehicle) => (
-            <Choice
-              defaultChecked={selected.includes(vehicle.slug)}
-              description={vehicle.category}
-              key={vehicle.slug}
-              label={vehicle.name}
-              name="mix"
-              type="checkbox"
-              value={vehicle.slug}
-            />
-          ))}
-        </div>
-      </fieldset>
+      <CheckboxGroup
+        defaultValues={selected}
+        description="Select one or more of the vehicles below. HOC's confirmed pricing and Lagos availability remain pending."
+        legend="Vehicle mix"
+        name="mix"
+        options={vehicles.map((vehicle) => ({
+          description: vehicle.category,
+          label: vehicle.name,
+          value: vehicle.slug,
+        }))}
+      />
     );
   }
 
   if (step === "livery") {
-    const livery = valueOf(query, "livery");
     return (
-      <fieldset>
-        <legend className="text-sm font-semibold">Livery direction</legend>
-        <p className="mt-2 text-sm leading-6 text-contrast-medium">
-          Choose a concept direction for review. Production options and requirements are confirmed later.
-        </p>
-        <div className="mt-6 grid gap-3">
-          <Choice
-            defaultChecked={livery === "operator"}
-            description="Capture an operator-led colour and identity direction during review."
-            label="Operator identity concept"
-            name="livery"
-            value="operator"
-          />
-          <Choice
-            defaultChecked={livery === "monochrome"}
-            description="Begin from a restrained black, white, and neutral vehicle direction."
-            label="Monochrome concept"
-            name="livery"
-            value="monochrome"
-          />
-        </div>
-      </fieldset>
+      <RadioGroup
+        defaultValue={valueOf(query, "livery")}
+        description="Choose a concept direction for review. Production options and requirements are confirmed later."
+        legend="Livery direction"
+        name="livery"
+        options={[
+          {
+            description:
+              "Capture an operator-led colour and identity direction during review.",
+            label: "Operator identity concept",
+            value: "operator",
+          },
+          {
+            description:
+              "Begin from a restrained black, white, and neutral vehicle direction.",
+            label: "Monochrome concept",
+            value: "monochrome",
+          },
+        ]}
+      />
     );
   }
 
   if (step === "package") {
     return (
-      <fieldset>
-        <legend className="text-sm font-semibold">Operating package</legend>
-        <div className="mt-6">
-          <Choice
-            defaultChecked
-            description="Package scope, pricing, and commercial terms will be confirmed during review."
-            label="Package selection pending"
-            name="package"
-            value="pending"
-          />
-        </div>
-      </fieldset>
+      <RadioGroup
+        defaultValue="pending"
+        legend="Operating package"
+        name="package"
+        options={[
+          {
+            description:
+              "Package scope, pricing, and commercial terms will be confirmed during review.",
+            label: "Package selection pending",
+            value: "pending",
+          },
+        ]}
+      />
     );
   }
 
@@ -200,6 +159,15 @@ function StepFields({ query, step }: { query: Query; step: ConfigurationStep }) 
     ["Estimated total", "Pending confirmation"],
   ];
 
+  const applyQuery = new URLSearchParams();
+  const city = valueOf(query, "city");
+  const size = valueOf(query, "size");
+  const livery = valueOf(query, "livery");
+  if (city) applyQuery.set("city", city);
+  if (size) applyQuery.set("size", size);
+  if (livery) applyQuery.set("livery", livery);
+  for (const vehicle of selectedVehicles) applyQuery.append("mix", vehicle.slug);
+
   return (
     <div>
       <p className="text-sm font-semibold">Configuration review</p>
@@ -212,10 +180,18 @@ function StepFields({ query, step }: { query: Query; step: ConfigurationStep }) 
         ))}
       </dl>
       <div className="mt-8 border-l-2 border-signal bg-surface p-5">
-        <p className="font-semibold">Application handoff begins in Milestone 5.</p>
+        <p className="font-semibold">Ready to take this to an application?</p>
         <p className="mt-2 text-sm leading-6 text-contrast-medium">
-          Authentication, KYC, application submission, and payment are intentionally not simulated here.
+          The next steps cover identity verification, company details, and
+          document upload. Your configuration carries straight through.
         </p>
+        <ButtonLink
+          className="mt-6"
+          href={`/apply/identity?${applyQuery.toString()}`}
+          variant="signal"
+        >
+          Start application
+        </ButtonLink>
       </div>
     </div>
   );
@@ -227,7 +203,7 @@ const stepIntroductions: Record<ConfigurationStep, { eyebrow: string; heading: s
   mix: { eyebrow: "03 / Vehicle mix", heading: "Compose the proposed fleet.", copy: "Select the catalogue directions that fit the service you intend to build." },
   livery: { eyebrow: "04 / Livery", heading: "Choose an identity direction.", copy: "Capture a visual direction now, then refine it through review and production planning." },
   package: { eyebrow: "05 / Package", heading: "Hold the commercial choice clearly.", copy: "Package names, contents, and pricing require HOC confirmation, so the interface keeps them explicitly pending." },
-  review: { eyebrow: "06 / Review", heading: "Check the configuration.", copy: "Review what has been captured before the application, KYC, and payment journey is connected." },
+  review: { eyebrow: "06 / Review", heading: "Check the configuration.", copy: "Review what has been captured before continuing into the application, KYC, and payment journey." },
 };
 
 export default async function ConfigurePage({ params, searchParams }: PageProps<"/configure/[step]">) {

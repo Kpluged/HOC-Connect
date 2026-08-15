@@ -14,3 +14,80 @@ export const tripIdSchema = z.uuid();
 export type UserRole = z.infer<typeof userRoleSchema>;
 export type OrganizationId = z.infer<typeof organizationIdSchema>;
 export type TripId = z.infer<typeof tripIdSchema>;
+
+export const platformRoleSchema = z.enum(["hoc_staff", "hoc_admin"]);
+export const organizationRoleSchema = z.enum(["owner", "dispatcher", "driver"]);
+
+export type PlatformRole = z.infer<typeof platformRoleSchema>;
+export type OrganizationRole = z.infer<typeof organizationRoleSchema>;
+
+export const organizationStatusSchema = z.enum([
+  "draft",
+  "applied",
+  "approved",
+  "live",
+  "suspended",
+]);
+
+export const applicationStatusSchema = z.enum([
+  "draft",
+  "submitted",
+  "under_review",
+  "approved",
+  "declined",
+]);
+
+export const applicationDocumentKindSchema = z.enum([
+  "government_id",
+  "proof_of_address",
+  "company_registration",
+  "tax_document",
+  "other",
+]);
+
+export type OrganizationStatus = z.infer<typeof organizationStatusSchema>;
+export type ApplicationStatus = z.infer<typeof applicationStatusSchema>;
+export type ApplicationDocumentKind = z.infer<
+  typeof applicationDocumentKindSchema
+>;
+
+/**
+ * Denormalized bridge until Milestone 6's persisted fleet_configurations
+ * schema exists - captures /configure's URL-carried selections at the
+ * moment an application is opened. See
+ * docs/HOC-Connect-architecture-and-schema.md section 4.
+ */
+export const configurationSnapshotSchema = z.object({
+  capturedAt: z.iso.datetime(),
+  city: z.string().optional(),
+  fleetSize: z.string().optional(),
+  livery: z.string().optional(),
+  package: z.string().optional(),
+  vehicleSlugs: z.array(z.string()),
+});
+
+export type ConfigurationSnapshot = z.infer<typeof configurationSnapshotSchema>;
+
+export const emailSchema = z.email();
+
+export const identityStepSchema = z.object({
+  documentType: z.enum(["national_id", "passport", "drivers_licence"]),
+  fullName: z.string().min(1),
+  phone: z.string().min(1),
+});
+
+export const companyStepSchema = z.object({
+  companyName: z.string().min(1),
+  companyRegistrationNumber: z.string().min(1),
+});
+
+export const applicationDocumentUploadSchema = z.object({
+  applicationId: z.uuid(),
+  kind: applicationDocumentKindSchema,
+  storagePath: z.string().min(1),
+});
+
+export const applicationDecisionSchema = z.object({
+  applicationId: z.uuid(),
+  decision: z.enum(["approved", "declined"]),
+});

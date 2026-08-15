@@ -6,7 +6,7 @@ import type {
 
 import { cn } from "@/lib/cn";
 
-type FieldShellProps = {
+export type FieldShellProps = {
   children: ReactNode;
   description?: string;
   error?: string;
@@ -14,7 +14,7 @@ type FieldShellProps = {
   label: string;
 };
 
-function FieldShell({
+export function FieldShell({
   children,
   description,
   error,
