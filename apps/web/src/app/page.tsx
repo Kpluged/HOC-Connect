@@ -75,6 +75,7 @@ export default function Home() {
                 detail={vehicle.category}
                 href={`/vehicles/${vehicle.slug}`}
                 image={vehicle.image}
+                imageFit={vehicle.imageFit}
                 key={vehicle.slug}
                 name={vehicle.name}
               />

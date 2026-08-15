@@ -1,7 +1,23 @@
 export type Vehicle = {
   /** Plain-English one-line role description, e.g. "Compact crossover · 5 seats". */
   category: string;
+  /** Grid-card + default detail-page-hero image. Treatment is governed by imageFit. */
   image: string;
+  /**
+   * "contain" = isolated product-plate cutout (transparent PNG), floated on
+   * the neutral surface with padding — the house treatment. "cover" =
+   * full-scene manufacturer photography, bled edge-to-edge with a
+   * desaturated-at-rest/full-colour-on-hover treatment so varied source
+   * lighting/backgrounds still read as one calm, monochrome-first system.
+   * Defaults to "contain" when omitted.
+   */
+  imageFit?: "contain" | "cover";
+  /**
+   * Optional full-scene manufacturer photography for the detail-page hero.
+   * When image itself is also a full photo (imageFit: "cover"), set this to
+   * the same path so the hero gets the same full-bleed treatment.
+   */
+  heroPhoto?: string;
   name: string;
   slug: string;
   /** Manufacturer, for attribution — never used as a substitute for HOC's own confirmed sourcing. */
@@ -118,7 +134,9 @@ export const vehicles: Vehicle[] = [
   {
     category: "Compact crossover SUV · 5 seats",
     doors: 5,
-    image: "/vehicles/cutouts/model-03-v2.png",
+    heroPhoto: "/vehicles/byd/byd-yuan-plus.webp",
+    image: "/vehicles/byd/byd-yuan-plus.webp",
+    imageFit: "cover",
     manufacturer: "BYD",
     name: "BYD Atto 3",
     segment: "Everyday",
@@ -135,7 +153,7 @@ export const vehicles: Vehicle[] = [
       topSpeedKmh: 160,
     },
     sourceNote:
-      "Global-market Atto 3, Extended Range battery — the configuration exported to Asia/Europe/Australia/Latin America since 2022, not the China-domestic 2026 Evo variant. Figures are BYD's published global specifications; HOC's actual procured trim for Lagos is pending confirmation.",
+      "Global-market Atto 3, Extended Range battery — the configuration exported to Asia/Europe/Australia/Latin America since 2022, not the China-domestic 2026 Evo variant. Figures are BYD's published global specifications; HOC's actual procured trim for Lagos is pending confirmation. Catalogue card and detail-page hero both use BYD's own press photography of the China-domestic Yuan Plus — the same underlying vehicle sold under the Atto 3 name in export markets; badge/plate visible in source image is China-domestic, not an HOC or Lagos market claim.",
   },
   {
     category: "Compact crossover SUV · 5 seats",
@@ -224,6 +242,174 @@ export const vehicles: Vehicle[] = [
     },
     sourceNote:
       "Single-motor RWD configuration, top LFP battery — Dongfeng also offers a dual-motor AWD performance variant (0-100 in 3.9s) and an EREV range-extender variant, neither listed here. Manufacturer has not published a top speed. HOC's actual procured trim for Lagos is pending confirmation.",
+  },
+  {
+    category: "City hatchback · 5 seats",
+    doors: 5,
+    heroPhoto: "/vehicles/byd/byd-seagull.webp",
+    image: "/vehicles/byd/byd-seagull.webp",
+    imageFit: "cover",
+    manufacturer: "BYD",
+    name: "BYD Seagull",
+    segment: "City",
+    slug: "byd-seagull",
+    specs: {
+      accelSeconds: 0,
+      batteryKwh: 0,
+      drivetrain: "Rear-wheel drive",
+      powerKw: 0,
+      powerPs: 0,
+      rangeBasis: "CLTC",
+      rangeKm: 0,
+      seats: 5,
+      topSpeedKmh: 0,
+    },
+    sourceNote:
+      "China-domestic Seagull, exported to some markets as Dolphin Surf/Dolphin Mini. BYD's Nigeria site has no product pages yet, and battery/range/power figures were not confirmed from BYD's accessible official pages during this pass — treat all numeric specs as pending HOC/manufacturer confirmation. Both the catalogue card and detail-page hero use BYD's own press photography (full-scene, not an isolated product-plate cutout like the rest of the catalogue).",
+  },
+  {
+    category: "Mid-size pickup truck · 5 seats",
+    doors: 4,
+    heroPhoto: "/vehicles/byd/byd-shark-6.webp",
+    image: "/vehicles/byd/byd-shark-6.webp",
+    imageFit: "cover",
+    manufacturer: "BYD",
+    name: "BYD Shark 6",
+    segment: "Premium",
+    slug: "byd-shark-6",
+    specs: {
+      accelSeconds: 0,
+      batteryKwh: 0,
+      drivetrain: "All-wheel drive (plug-in hybrid)",
+      powerKw: 321,
+      powerPs: 431,
+      rangeBasis: "CLTC",
+      rangeKm: 0,
+      seats: 5,
+      topSpeedKmh: 0,
+    },
+    sourceNote:
+      "DM-o plug-in hybrid double-cab pickup. Power (321 kW combined) and 2,500 kg braked towing capacity are confirmed from BYD's official South Africa product page; the PS figure is a standard kW-to-PS conversion of that published number, not independently stated by BYD. Battery capacity, electric/combined range, acceleration, and top speed were not published on the accessible page — treat as pending. Both the catalogue card and detail-page hero use BYD's own press photography (full-scene, not an isolated product-plate cutout like the rest of the catalogue). HOC's confirmed specs, pricing, and Lagos availability remain pending.",
+  },
+  {
+    category: "Full-size off-road SUV · 5 seats",
+    doors: 5,
+    heroPhoto: "/vehicles/byd/bao-8.webp",
+    image: "/vehicles/byd/bao-8.webp",
+    imageFit: "cover",
+    manufacturer: "BYD (Fang Cheng Bao)",
+    name: "Fang Cheng Bao Bao 8",
+    segment: "Premium",
+    slug: "bao-8",
+    specs: {
+      accelSeconds: 0,
+      batteryKwh: 0,
+      drivetrain: "All-wheel drive (plug-in hybrid)",
+      powerKw: 0,
+      powerPs: 0,
+      rangeBasis: "CLTC",
+      rangeKm: 0,
+      seats: 5,
+      topSpeedKmh: 0,
+    },
+    sourceNote:
+      "Fang Cheng Bao (方程豹) is BYD's dedicated off-road sub-brand — badged accordingly, not a separate manufacturer. Battery/range/power figures were not confirmed from an accessible official page during this pass — treat all numeric specs as pending. Both the catalogue card and detail-page hero use BYD's own press photography (full-scene, not an isolated product-plate cutout like the rest of the catalogue). HOC's confirmed specs, pricing, and Lagos availability remain pending.",
+  },
+  {
+    category: "Compact crossover SUV · 5 seats",
+    doors: 5,
+    heroPhoto: "/vehicles/byd/byd-song-plus-ev.webp",
+    image: "/vehicles/byd/byd-song-plus-ev.webp",
+    imageFit: "cover",
+    manufacturer: "BYD",
+    name: "BYD Song Plus EV",
+    segment: "Everyday",
+    slug: "byd-song-plus-ev",
+    specs: {
+      accelSeconds: 0,
+      batteryKwh: 0,
+      drivetrain: "Front-wheel drive",
+      powerKw: 0,
+      powerPs: 0,
+      rangeBasis: "CLTC",
+      rangeKm: 0,
+      seats: 5,
+      topSpeedKmh: 0,
+    },
+    sourceNote:
+      "China-domestic pure-electric Song Plus. Battery/range/power figures were not confirmed from an accessible official page during this pass — treat all numeric specs as pending. Both the catalogue card and detail-page hero use BYD's own press photography (full-scene, not an isolated product-plate cutout like the rest of the catalogue). HOC's confirmed specs, pricing, and Lagos availability remain pending.",
+  },
+  {
+    category: "Compact crossover SUV · 5 seats",
+    doors: 5,
+    heroPhoto: "/vehicles/byd/byd-song-plus-dm-i.webp",
+    image: "/vehicles/byd/byd-song-plus-dm-i.webp",
+    imageFit: "cover",
+    manufacturer: "BYD",
+    name: "BYD Song Plus DM-i",
+    segment: "Everyday",
+    slug: "byd-song-plus-dm-i",
+    specs: {
+      accelSeconds: 0,
+      batteryKwh: 0,
+      drivetrain: "Front-wheel drive (plug-in hybrid)",
+      powerKw: 0,
+      powerPs: 0,
+      rangeBasis: "CLTC",
+      rangeKm: 0,
+      seats: 5,
+      topSpeedKmh: 0,
+    },
+    sourceNote:
+      "DM-i plug-in hybrid variant of the Song Plus (distinct from the pure-electric Song Plus EV listed separately). Battery/range/power figures were not confirmed from an accessible official page during this pass — treat all numeric specs as pending. Both the catalogue card and detail-page hero use BYD's own press photography (full-scene, not an isolated product-plate cutout like the rest of the catalogue). HOC's confirmed specs, pricing, and Lagos availability remain pending.",
+  },
+  {
+    category: "Subcompact crossover SUV · 5 seats",
+    doors: 5,
+    heroPhoto: "/vehicles/byd/byd-yuan-up.webp",
+    image: "/vehicles/byd/byd-yuan-up.webp",
+    imageFit: "cover",
+    manufacturer: "BYD",
+    name: "BYD Yuan Up",
+    segment: "City",
+    slug: "byd-yuan-up",
+    specs: {
+      accelSeconds: 0,
+      batteryKwh: 0,
+      drivetrain: "Front-wheel drive",
+      powerKw: 0,
+      powerPs: 0,
+      rangeBasis: "CLTC",
+      rangeKm: 0,
+      seats: 5,
+      topSpeedKmh: 0,
+    },
+    sourceNote:
+      "China-domestic Yuan Up, BYD's entry-level crossover — sits below the Yuan Plus/Atto 3 in BYD's own lineup. Battery/range/power figures were not confirmed from an accessible official page during this pass — treat all numeric specs as pending. Both the catalogue card and detail-page hero use BYD's own press photography (full-scene, not an isolated product-plate cutout like the rest of the catalogue). HOC's confirmed specs, pricing, and Lagos availability remain pending.",
+  },
+  {
+    category: "Mid-size off-road SUV · 5 seats",
+    doors: 5,
+    heroPhoto: "/vehicles/byd/bao-5.webp",
+    image: "/vehicles/byd/bao-5.webp",
+    imageFit: "cover",
+    manufacturer: "BYD (Fang Cheng Bao)",
+    name: "Fang Cheng Bao Bao 5",
+    segment: "Premium",
+    slug: "bao-5",
+    specs: {
+      accelSeconds: 0,
+      batteryKwh: 0,
+      drivetrain: "All-wheel drive (plug-in hybrid)",
+      powerKw: 0,
+      powerPs: 0,
+      rangeBasis: "CLTC",
+      rangeKm: 0,
+      seats: 5,
+      topSpeedKmh: 0,
+    },
+    sourceNote:
+      "Fang Cheng Bao (方程豹) is BYD's dedicated off-road sub-brand — badged accordingly, not a separate manufacturer. Battery/range/power figures were not confirmed from an accessible official page during this pass — treat all numeric specs as pending. Both the catalogue card and detail-page hero use BYD's own press photography (full-scene, not an isolated product-plate cutout like the rest of the catalogue). HOC's confirmed specs, pricing, and Lagos availability remain pending.",
   },
 ];
 

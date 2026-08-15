@@ -36,6 +36,7 @@ export default function VehiclesPage() {
               detail={vehicle.category}
               href={`/vehicles/${vehicle.slug}`}
               image={vehicle.image}
+              imageFit={vehicle.imageFit}
               key={vehicle.slug}
               name={vehicle.name}
             />

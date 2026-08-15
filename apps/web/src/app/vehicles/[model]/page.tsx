@@ -30,14 +30,18 @@ export async function generateMetadata({
 function buildSpecs(vehicle: Vehicle) {
   const { specs } = vehicle;
   return [
-    {
-      caption: `${specs.rangeBasis} combined estimate, manufacturer-published.`,
-      label: "Electric range combined",
-      unit: "km",
-      value: specs.rangeKm,
-    },
-    { decimals: 1, label: "Battery capacity", unit: "kWh", value: specs.batteryKwh },
-    { label: "Power", unit: "kW", value: specs.powerKw },
+    specs.rangeKm > 0
+      ? {
+          caption: `${specs.rangeBasis} combined estimate, manufacturer-published.`,
+          label: "Electric range combined",
+          unit: "km",
+          value: specs.rangeKm,
+        }
+      : null,
+    specs.batteryKwh > 0
+      ? { decimals: 1, label: "Battery capacity", unit: "kWh", value: specs.batteryKwh }
+      : null,
+    specs.powerKw > 0 ? { label: "Power", unit: "kW", value: specs.powerKw } : null,
     specs.accelSeconds > 0
       ? { decimals: 1, label: "Acceleration 0–100 km/h", unit: "s", value: specs.accelSeconds }
       : null,
@@ -72,40 +76,69 @@ export default async function VehicleDetailPage({
         </div>
       </div>
 
-      <section className="relative isolate overflow-hidden border-b border-contrast-low bg-canvas">
-        <div className="absolute inset-x-0 top-0 h-[45%] overflow-hidden bg-[#07090c]">
-          <Image
-            alt="Electric fleet atmosphere"
-            className="scale-105 object-cover saturate-50"
-            fill
-            loading="eager"
-            quality={90}
-            sizes="100vw"
-            src="/vehicles/lineup-02.jpg"
-          />
-          <div className="absolute inset-0 bg-[#07090c]/64" />
-        </div>
-
-        <div className="page-shell relative flex min-h-[calc(100dvh-8.5rem)] flex-col items-center pb-16 pt-12 text-center lg:pb-20 lg:pt-16">
-          <p className="relative z-10 text-xs font-semibold uppercase tracking-[0.2em] text-white/70">HOC Elite Wheels vehicle catalogue</p>
-          <div className="relative z-10 -mt-1 h-[clamp(19rem,46vw,38rem)] w-full max-w-6xl sm:-mt-8">
+      <section
+        className={`relative isolate overflow-hidden border-b border-contrast-low ${vehicle.heroPhoto ? "min-h-[100svh] bg-[#07090c]" : "bg-canvas"}`}
+      >
+        {vehicle.heroPhoto ? (
+          <>
             <Image
-              alt={`${vehicle.name} electric vehicle product cut-out`}
-              className="object-contain drop-shadow-[0_24px_18px_rgba(0,0,0,0.2)]"
+              alt={`${vehicle.name} electric vehicle`}
+              className="object-cover"
               fill
               loading="eager"
               quality={90}
-              sizes="(min-width: 1280px) 1152px, 94vw"
-              src={vehicle.image}
+              sizes="100vw"
+              src={vehicle.heroPhoto}
             />
+            <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/10 to-black/75" />
+          </>
+        ) : (
+          <div className="absolute inset-x-0 top-0 h-[45%] overflow-hidden bg-[#07090c]">
+            <Image
+              alt="Electric fleet atmosphere"
+              className="scale-105 object-cover saturate-50"
+              fill
+              loading="eager"
+              quality={90}
+              sizes="100vw"
+              src="/vehicles/lineup-02.jpg"
+            />
+            <div className="absolute inset-0 bg-[#07090c]/64" />
           </div>
-          <div className="relative z-10 -mt-4 flex max-w-2xl flex-col items-center sm:-mt-12 lg:-mt-16">
-            <span className="rounded-control bg-surface px-4 py-1.5 text-xs font-semibold">Electric · {vehicle.manufacturer}</span>
+        )}
+
+        <div
+          className={`page-shell relative flex min-h-[calc(100dvh-8.5rem)] flex-col items-center pb-16 pt-12 text-center lg:pb-20 lg:pt-16 ${vehicle.heroPhoto ? "justify-center text-white" : ""}`}
+        >
+          {!vehicle.heroPhoto ? (
+            <>
+              <p className="relative z-10 text-xs font-semibold uppercase tracking-[0.2em] text-white/70">HOC Elite Wheels vehicle catalogue</p>
+              <div className="relative z-10 -mt-1 h-[clamp(19rem,46vw,38rem)] w-full max-w-6xl sm:-mt-8">
+                <Image
+                  alt={`${vehicle.name} electric vehicle product cut-out`}
+                  className="object-contain drop-shadow-[0_24px_18px_rgba(0,0,0,0.2)]"
+                  fill
+                  loading="eager"
+                  quality={90}
+                  sizes="(min-width: 1280px) 1152px, 94vw"
+                  src={vehicle.image}
+                />
+              </div>
+            </>
+          ) : null}
+          <div
+            className={`relative z-10 flex max-w-2xl flex-col items-center ${vehicle.heroPhoto ? "" : "-mt-4 sm:-mt-12 lg:-mt-16"}`}
+          >
+            <span
+              className={`rounded-control px-4 py-1.5 text-xs font-semibold ${vehicle.heroPhoto ? "bg-white/12 text-white backdrop-blur-xl" : "bg-surface"}`}
+            >
+              Electric · {vehicle.manufacturer}
+            </span>
             <h1 className="mt-5 text-[clamp(3.5rem,7vw,7rem)] font-semibold leading-[0.88] tracking-[-0.06em]">{vehicle.name}</h1>
-            <p className="mt-6 max-w-[48ch] text-base leading-7 text-contrast-high">
+            <p className={`mt-6 max-w-[48ch] text-base leading-7 ${vehicle.heroPhoto ? "text-white/85" : "text-contrast-high"}`}>
               {vehicle.category}. Manufacturer specifications below are {vehicle.manufacturer}&apos;s published figures for the global-market configuration; HOC&apos;s confirmed pricing, availability, and procurement trim for Lagos remain pending.
             </p>
-            <ButtonLink className="mt-8" href={`/configure/city?vehicle=${vehicle.slug}`} variant="signal">Add to configuration</ButtonLink>
+            <ButtonLink className="mt-8" href={`/configure/city?vehicle=${vehicle.slug}`} variant={vehicle.heroPhoto ? "glass" : "signal"}>Add to configuration</ButtonLink>
           </div>
         </div>
       </section>
