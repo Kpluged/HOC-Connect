@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { BrandWordmark } from "@/components/ui/brand-wordmark";
+import { CloseIcon, MenuIcon, PersonIcon } from "@/components/ui/icons";
 import { vehicles } from "@/features/catalogue/data";
 
 const navigation = [
@@ -20,22 +21,6 @@ type NavigationKey = (typeof navigation)[number]["key"];
 const configurationSteps = ["City", "Fleet size", "Vehicle mix", "Livery", "Package", "Review"];
 const operatingStages = ["Discover", "Configure & apply", "Approve & provision", "Operate & earn"];
 const ease = [0.16, 1, 0.3, 1] as const;
-
-function CloseIcon() {
-  return (
-    <svg aria-hidden="true" fill="none" height="20" viewBox="0 0 20 20" width="20">
-      <path d="M4 4l12 12M16 4L4 16" stroke="currentColor" strokeLinecap="round" strokeWidth="1.5" />
-    </svg>
-  );
-}
-
-function MenuIcon() {
-  return (
-    <svg aria-hidden="true" fill="none" height="18" viewBox="0 0 20 18" width="20">
-      <path d="M2 4h16M2 9h16M2 14h16" stroke="currentColor" strokeLinecap="round" strokeWidth="1.5" />
-    </svg>
-  );
-}
 
 function SecondaryPanel({ active, close }: { active: NavigationKey; close: () => void }) {
   if (active === "vehicles") {
@@ -110,7 +95,13 @@ function SecondaryPanel({ active, close }: { active: NavigationKey; close: () =>
   );
 }
 
-export function OverlayNav({ tone = "default" }: { tone?: "default" | "inverse" }) {
+export function OverlayNav({
+  isSignedIn = false,
+  tone = "default",
+}: {
+  isSignedIn?: boolean;
+  tone?: "default" | "inverse";
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const [active, setActive] = useState<NavigationKey>("vehicles");
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -228,7 +219,31 @@ export function OverlayNav({ tone = "default" }: { tone?: "default" | "inverse" 
                       ))}
                     </ul>
                   </nav>
-                  <Link aria-label="HOC Elite Wheels home" className="mt-auto inline-flex min-h-12 items-center justify-between rounded-card px-5 hover:bg-surface" href="/" onClick={close}>
+                  <div className="mt-auto grid gap-2">
+                    <Link
+                      className="menu-control flex min-h-14 items-center justify-between rounded-card bg-surface px-5 text-left text-base font-semibold"
+                      href={isSignedIn ? "/account" : "/auth/sign-in"}
+                      onClick={close}
+                    >
+                      <span className="inline-flex items-center gap-3">
+                        <PersonIcon className="size-5" />
+                        {isSignedIn ? "Your account" : "Sign in"}
+                      </span>
+                      <span aria-hidden="true">›</span>
+                    </Link>
+                    {isSignedIn ? (
+                      <form action="/auth/sign-out" method="post">
+                        <button
+                          className="menu-control flex min-h-11 w-full items-center px-5 text-left text-sm text-contrast-medium hover:text-primary"
+                          onClick={close}
+                          type="submit"
+                        >
+                          Sign out
+                        </button>
+                      </form>
+                    ) : null}
+                  </div>
+                  <Link aria-label="HOC Elite Wheels home" className="inline-flex min-h-12 items-center justify-between rounded-card px-5 hover:bg-surface" href="/" onClick={close}>
                     <span className="inline-flex items-baseline gap-2">
                       <BrandWordmark className="text-[1.55rem] leading-none tracking-[-0.04em]" />
                       <span className="text-sm font-semibold">home</span>

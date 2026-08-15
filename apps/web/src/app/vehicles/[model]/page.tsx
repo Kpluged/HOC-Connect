@@ -6,8 +6,10 @@ import { notFound } from "next/navigation";
 import { AnimatedSpecBlock } from "@/components/ui/animated-spec-block";
 import { MarketingFooter } from "@/components/marketing/marketing-footer";
 import { ButtonLink } from "@/components/ui/button";
+import { ChangeModelPanel } from "@/components/ui/change-model-panel";
 import { SiteHeader } from "@/components/ui/site-header";
-import { getVehicle, vehicles, type Vehicle } from "@/features/catalogue/data";
+import { buildSpecs } from "@/features/catalogue/build-specs";
+import { getVehicle, vehicles } from "@/features/catalogue/data";
 
 export function generateStaticParams() {
   return vehicles.map((vehicle) => ({ model: vehicle.slug }));
@@ -25,29 +27,6 @@ export async function generateMetadata({
     description: `${vehicle.name} catalogue detail for HOC Elite Wheels. Manufacturer specifications shown; HOC pricing and availability remain pending confirmation.`,
     title: vehicle.name,
   };
-}
-
-function buildSpecs(vehicle: Vehicle) {
-  const { specs } = vehicle;
-  return [
-    specs.rangeKm > 0
-      ? {
-          caption: `${specs.rangeBasis} combined estimate, manufacturer-published.`,
-          label: "Electric range combined",
-          unit: "km",
-          value: specs.rangeKm,
-        }
-      : null,
-    specs.batteryKwh > 0
-      ? { decimals: 1, label: "Battery capacity", unit: "kWh", value: specs.batteryKwh }
-      : null,
-    specs.powerKw > 0 ? { label: "Power", unit: "kW", value: specs.powerKw } : null,
-    specs.accelSeconds > 0
-      ? { decimals: 1, label: "Acceleration 0–100 km/h", unit: "s", value: specs.accelSeconds }
-      : null,
-    specs.topSpeedKmh > 0 ? { label: "Top speed", unit: "km/h", value: specs.topSpeedKmh } : null,
-    { label: "Seating", unit: "seats", value: specs.seats },
-  ].filter((spec) => spec !== null);
 }
 
 export default async function VehicleDetailPage({
@@ -142,6 +121,8 @@ export default async function VehicleDetailPage({
           </div>
         </div>
       </section>
+
+      <ChangeModelPanel currentSlug={vehicle.slug} />
 
       <section className="border-y border-contrast-low bg-surface" id="specifications">
         <div className="page-shell py-20 lg:py-28">

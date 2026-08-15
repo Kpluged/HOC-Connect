@@ -37,13 +37,8 @@ export function VerifyForm({
         placeholder="000000"
         required
       />
-      <Button
-        className="w-full sm:w-auto sm:justify-self-start"
-        disabled={pending}
-        type="submit"
-        variant="signal"
-      >
-        {pending ? "Verifying…" : "Verify and continue"}
+      <Button className="w-full" disabled={pending} type="submit" variant="signal">
+        {pending ? "Verifying…" : "Continue"}
       </Button>
     </form>
   );

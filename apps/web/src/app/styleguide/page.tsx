@@ -8,6 +8,7 @@ import { DataTable } from "@/components/ui/data-table";
 import { Explainer } from "@/components/ui/explainer";
 import { Field, SelectField } from "@/components/ui/field";
 import { Footnotes } from "@/components/ui/footnotes";
+import { PersonIcon } from "@/components/ui/icons";
 import { KpiTile } from "@/components/ui/kpi-tile";
 import { MapPanel } from "@/components/ui/map-panel";
 import { OverlayNav } from "@/components/ui/overlay-nav";
@@ -18,6 +19,9 @@ import { SpecBlock } from "@/components/ui/spec-block";
 import { StatusDot } from "@/components/ui/status-dot";
 import { StickySummary } from "@/components/ui/sticky-summary";
 import { VehicleCard } from "@/components/ui/vehicle-card";
+import { getBodyType } from "@/features/catalogue/body-type";
+import { buildSpecs } from "@/features/catalogue/build-specs";
+import { vehicles } from "@/features/catalogue/data";
 
 export const metadata: Metadata = {
   title: "Interface system",
@@ -75,6 +79,10 @@ function ComponentRoom({ name, number }: { name: RoomName; number: string }) {
             <Chip variant="inactive">Inactive</Chip>
             <StatusDot label="Live state" live />
             <StatusDot label="Awaiting state" />
+            <span className="inline-flex items-center gap-2 text-sm text-contrast-high">
+              <PersonIcon className="size-5" />
+              Person icon
+            </span>
           </div>
         </Sample>
 
@@ -147,6 +155,25 @@ function ComponentRoom({ name, number }: { name: RoomName; number: string }) {
                     text: "Values remain unavailable until a verified source is connected.",
                   },
                 ]}
+              />
+            </div>
+          </div>
+          <div className="mt-10">
+            <p className="mb-4 text-xs text-contrast-medium">
+              Expanded card - metadata pills, compact spec row, dual CTA
+              (used by ChangeModelPanel)
+            </p>
+            <div className="max-w-sm">
+              <VehicleCard
+                bodyType={getBodyType(vehicles[0].category)}
+                detail={vehicles[0].category}
+                href="#vehicle-sample"
+                image={vehicles[0].image}
+                manufacturer={vehicles[0].manufacturer}
+                name={vehicles[0].name}
+                secondaryHref="#configure-sample"
+                segment={vehicles[0].segment}
+                specs={buildSpecs(vehicles[0])}
               />
             </div>
           </div>
