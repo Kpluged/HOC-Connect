@@ -22,6 +22,8 @@ const serverEnvSchema = z.object({
   DATABASE_URL: optionalTrimmed(),
   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: z.string().min(1),
   NEXT_PUBLIC_SUPABASE_URL: z.url(),
+  PAYSTACK_ADAPTER_MODE: z.enum(["stub", "live"]).default("stub"),
+  PAYSTACK_SECRET_KEY: optionalTrimmed(),
   PREMBLY_ADAPTER_MODE: z.enum(["stub", "live"]).default("stub"),
   PREMBLY_API_KEY: optionalTrimmed(),
   PREMBLY_APP_ID: optionalTrimmed(),

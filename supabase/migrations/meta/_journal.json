@@ -22,6 +22,20 @@
       "when": 1786754556879,
       "tag": "0007_fix_application_update_policy_status",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1786800643506,
+      "tag": "0008_orders_payments_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1786821600000,
+      "tag": "0011_fix_payments_insert_status_check",
+      "breakpoints": true
     }
   ]
 }

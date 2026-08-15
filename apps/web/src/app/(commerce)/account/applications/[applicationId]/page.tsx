@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { MarketingFooter } from "@/components/marketing/marketing-footer";
+import { ButtonLink } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
 import { SiteHeader } from "@/components/ui/site-header";
 import { requiredDocumentKinds } from "@/features/applications/data";
@@ -32,6 +33,11 @@ export default async function ApplicationDetailPage({
 
   const { application, documents, notes } = result;
   const uploadedKinds = new Set(documents.map((doc) => doc.kind));
+
+  const order =
+    application.status === "approved"
+      ? await caller.orders.getByApplicationId({ applicationId: application.id })
+      : null;
 
   return (
     <main className="min-h-dvh bg-canvas" data-room="light">
@@ -107,6 +113,14 @@ export default async function ApplicationDetailPage({
                   </li>
                 ))}
               </ul>
+            </div>
+          ) : null}
+
+          {order ? (
+            <div className="mt-10">
+              <ButtonLink href={`/orders/${order.id}`} variant="signal">
+                View order
+              </ButtonLink>
             </div>
           ) : null}
         </header>

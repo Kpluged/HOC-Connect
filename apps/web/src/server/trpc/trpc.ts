@@ -24,6 +24,7 @@ export const protectedProcedure = t.procedure.use(async ({ ctx, next }) => {
   return next({
     ctx: {
       ...ctx,
+      email: claims.email,
       userId: claims.sub,
       withRLS: <T>(fn: (tx: RLSTransaction) => Promise<T>) =>
         withRLS(claims, fn),

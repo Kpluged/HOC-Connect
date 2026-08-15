@@ -91,3 +91,35 @@ export const applicationDecisionSchema = z.object({
   applicationId: z.uuid(),
   decision: z.enum(["approved", "declined"]),
 });
+
+export const orderStatusSchema = z.enum([
+  "draft",
+  "deposit_pending",
+  "deposit_paid",
+  "balance_pending",
+  "paid_in_full",
+  "cancelled",
+]);
+
+export const paymentKindSchema = z.enum(["deposit", "balance"]);
+
+export const paymentStatusSchema = z.enum(["pending", "succeeded", "failed"]);
+
+export type OrderStatus = z.infer<typeof orderStatusSchema>;
+export type PaymentKind = z.infer<typeof paymentKindSchema>;
+export type PaymentStatus = z.infer<typeof paymentStatusSchema>;
+
+/**
+ * Money is always non-negative integer minor units plus an explicit 3-letter
+ * currency code - no floats. See docs/HOC-Connect-architecture-and-schema.md
+ * section 9.
+ */
+export const currencySchema = z.string().length(3);
+
+export const createOrderSchema = z.object({
+  applicationId: z.uuid(),
+  currency: currencySchema,
+  depositMinor: z.number().int().nonnegative(),
+  pricingNote: z.string().optional(),
+  totalMinor: z.number().int().nonnegative(),
+});

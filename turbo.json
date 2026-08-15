@@ -12,7 +12,9 @@
         "PREMBLY_ADAPTER_MODE",
         "PREMBLY_BASE_URL",
         "PREMBLY_API_KEY",
-        "PREMBLY_APP_ID"
+        "PREMBLY_APP_ID",
+        "PAYSTACK_ADAPTER_MODE",
+        "PAYSTACK_SECRET_KEY"
       ]
     },
     "dev": {
@@ -32,7 +34,9 @@
         "PREMBLY_ADAPTER_MODE",
         "PREMBLY_BASE_URL",
         "PREMBLY_API_KEY",
-        "PREMBLY_APP_ID"
+        "PREMBLY_APP_ID",
+        "PAYSTACK_ADAPTER_MODE",
+        "PAYSTACK_SECRET_KEY"
       ]
     }
   }

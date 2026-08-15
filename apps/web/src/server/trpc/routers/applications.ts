@@ -9,11 +9,12 @@ import {
   applicationDocuments,
   applicationNotes,
   applications,
+  organizations,
   profiles,
 } from "@hoc/db";
 import { getPremblyAdapter } from "@hoc/integrations/prembly";
 import { TRPCError } from "@trpc/server";
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, inArray } from "drizzle-orm";
 import { z } from "zod";
 
 import { protectedProcedure, router, staffProcedure } from "../trpc";
@@ -91,16 +92,29 @@ export const applicationsRouter = router({
   decide: staffProcedure
     .input(applicationDecisionSchema)
     .mutation(async ({ ctx, input }) => {
-      await ctx.withRLS((tx) =>
-        tx
+      await ctx.withRLS(async (tx) => {
+        const [updated] = await tx
           .update(applications)
           .set({
             decidedAt: new Date(),
             decidedBy: ctx.userId,
             status: input.decision,
           })
-          .where(eq(applications.id, input.applicationId)),
-      );
+          .where(eq(applications.id, input.applicationId))
+          .returning();
+
+        if (updated && input.decision === "approved") {
+          await tx
+            .update(organizations)
+            .set({ status: "approved" })
+            .where(
+              and(
+                eq(organizations.id, updated.organizationId),
+                inArray(organizations.status, ["draft", "applied"]),
+              ),
+            );
+        }
+      });
     }),
 
   getById: protectedProcedure
@@ -219,6 +233,19 @@ export const applicationsRouter = router({
             ),
           )
           .returning();
+
+        if (updated) {
+          await tx
+            .update(organizations)
+            .set({ status: "applied" })
+            .where(
+              and(
+                eq(organizations.id, updated.organizationId),
+                eq(organizations.status, "draft"),
+              ),
+            );
+        }
+
         return updated;
       });
 

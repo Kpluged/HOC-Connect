@@ -6,12 +6,22 @@ import { MarketingFooter } from "@/components/marketing/marketing-footer";
 import { StaffOnlyNotice } from "@/components/admin/staff-only-notice";
 import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
+import { DataTable } from "@/components/ui/data-table";
+import { Field, SelectField } from "@/components/ui/field";
 import { SiteHeader } from "@/components/ui/site-header";
+import { StickySummary } from "@/components/ui/sticky-summary";
 import { Textarea } from "@/components/ui/textarea";
+import { formatMoney } from "@/lib/money";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getServerCaller } from "@/server/trpc/caller";
 
 import { addStaffNote, decideApplication } from "../actions";
+import {
+  cancelOrder,
+  createOrder,
+  finalizeOrder,
+  updateOrderTotals,
+} from "../order-actions";
 
 export const metadata: Metadata = {
   description: "Review a fleet application: documents, verification, and decision.",
@@ -66,6 +76,12 @@ export default async function AdminApplicationDetailPage({
   );
 
   const isDecided = application.status === "approved" || application.status === "declined";
+
+  const order =
+    application.status === "approved"
+      ? await caller.orders.getByApplicationId({ applicationId: application.id })
+      : null;
+  const orderDetail = order ? await caller.orders.getById({ id: order.id }) : null;
 
   return (
     <main className="min-h-dvh bg-canvas" data-room="light">
@@ -171,6 +187,196 @@ export default async function AdminApplicationDetailPage({
           </form>
         </div>
       </section>
+
+      {application.status === "approved" ? (
+        <section className="border-t border-contrast-low bg-surface">
+          <div className="page-shell grid gap-12 py-16 lg:grid-cols-12 lg:py-24">
+            <header className="min-w-0 lg:col-span-7">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-contrast-medium">
+                Order
+              </p>
+              <h2 className="mt-5 text-[clamp(2rem,4vw,3rem)] font-semibold leading-[0.95] tracking-[-0.045em]">
+                {order ? "Fleet order" : "Convert to an order"}
+              </h2>
+
+              {!order || order.status === "cancelled" ? (
+                <>
+                  {order?.status === "cancelled" ? (
+                    <p className="mt-4 text-sm text-contrast-medium">
+                      The previous order for this application was cancelled. Start a
+                      new one below.
+                    </p>
+                  ) : null}
+                  <form action={createOrder} className="mt-8 grid max-w-md gap-6">
+                    <input name="applicationId" type="hidden" value={application.id} />
+                    <Field
+                      description="Total for the full fleet deal, in major currency units (e.g. 5000000.00)."
+                      id="total"
+                      label="Total"
+                      min="0"
+                      name="total"
+                      required
+                      step="0.01"
+                      type="number"
+                    />
+                    <Field
+                      description="Amount due immediately. Cannot exceed the total."
+                      id="deposit"
+                      label="Deposit"
+                      min="0"
+                      name="deposit"
+                      required
+                      step="0.01"
+                      type="number"
+                    />
+                    <SelectField defaultValue="NGN" id="currency" label="Currency" name="currency">
+                      <option value="NGN">NGN</option>
+                      <option value="USD">USD</option>
+                    </SelectField>
+                    <Textarea
+                      description="Optional context for this pricing - shown to staff only."
+                      id="pricingNote"
+                      label="Pricing note"
+                      name="pricingNote"
+                    />
+                    <Button className="justify-self-start" type="submit" variant="signal">
+                      Create order
+                    </Button>
+                  </form>
+                </>
+              ) : order.status === "draft" ? (
+                <form action={updateOrderTotals} className="mt-8 grid max-w-md gap-6">
+                  <input name="applicationId" type="hidden" value={application.id} />
+                  <input name="orderId" type="hidden" value={order.id} />
+                  <Field
+                    defaultValue={(order.totalMinor / 100).toFixed(2)}
+                    id="total"
+                    label="Total"
+                    min="0"
+                    name="total"
+                    required
+                    step="0.01"
+                    type="number"
+                  />
+                  <Field
+                    defaultValue={(order.depositMinor / 100).toFixed(2)}
+                    id="deposit"
+                    label="Deposit"
+                    min="0"
+                    name="deposit"
+                    required
+                    step="0.01"
+                    type="number"
+                  />
+                  <SelectField
+                    defaultValue={order.currency}
+                    id="currency"
+                    label="Currency"
+                    name="currency"
+                  >
+                    <option value="NGN">NGN</option>
+                    <option value="USD">USD</option>
+                  </SelectField>
+                  <Textarea
+                    defaultValue={order.pricingNote ?? ""}
+                    id="pricingNote"
+                    label="Pricing note"
+                    name="pricingNote"
+                  />
+                  <div className="flex flex-wrap gap-4">
+                    <Button type="submit" variant="secondary">
+                      Save totals
+                    </Button>
+                  </div>
+                </form>
+              ) : (
+                <>
+                  <p className="mt-4 max-w-[52ch] text-sm leading-6 text-contrast-high">
+                    {order.pricingNote || "No pricing note recorded."}
+                  </p>
+                  {orderDetail && orderDetail.payments.length > 0 ? (
+                    <div className="mt-8">
+                      <DataTable
+                        caption="Payments for this order"
+                        columns={[
+                          { key: "kind", label: "Kind" },
+                          { key: "amount", align: "right", label: "Amount" },
+                          { key: "status", label: "Status" },
+                          { key: "date", label: "Date" },
+                        ]}
+                        rows={orderDetail.payments.map((payment) => ({
+                          id: payment.id,
+                          values: {
+                            amount: formatMoney(payment.amountMinor, payment.currency),
+                            date: new Date(payment.createdAt).toLocaleString(),
+                            kind: payment.kind,
+                            status: payment.status,
+                          },
+                        }))}
+                      />
+                    </div>
+                  ) : (
+                    <p className="mt-8 text-sm text-contrast-medium">
+                      No payment attempts yet.
+                    </p>
+                  )}
+                </>
+              )}
+
+              {order && order.status !== "cancelled" && order.status !== "paid_in_full" ? (
+                <form action={cancelOrder} className="mt-8">
+                  <input name="applicationId" type="hidden" value={application.id} />
+                  <input name="orderId" type="hidden" value={order.id} />
+                  <Button type="submit" variant="outline">
+                    Cancel order
+                  </Button>
+                </form>
+              ) : null}
+            </header>
+
+            {order && order.status !== "cancelled" ? (
+              <div className="min-w-0 lg:col-span-4 lg:col-start-9">
+                <StickySummary
+                  action={
+                    order.status === "draft" ? (
+                      <form action={finalizeOrder}>
+                        <input name="applicationId" type="hidden" value={application.id} />
+                        <input name="orderId" type="hidden" value={order.id} />
+                        <Button className="w-full" type="submit" variant="signal">
+                          Finalize order
+                        </Button>
+                      </form>
+                    ) : undefined
+                  }
+                  heading="Order summary"
+                  rows={[
+                    { label: "Status", value: order.status.replace(/_/g, " ") },
+                    { label: "Total", value: formatMoney(order.totalMinor, order.currency) },
+                    {
+                      label: "Deposit",
+                      value: formatMoney(order.depositMinor, order.currency),
+                    },
+                    {
+                      label: "Balance",
+                      value: formatMoney(
+                        order.totalMinor - order.depositMinor,
+                        order.currency,
+                      ),
+                    },
+                    {
+                      label: "Terms accepted",
+                      value: order.termsAcceptedAt
+                        ? new Date(order.termsAcceptedAt).toLocaleDateString()
+                        : "Not yet",
+                    },
+                  ]}
+                />
+              </div>
+            ) : null}
+          </div>
+        </section>
+      ) : null}
+
       <MarketingFooter />
     </main>
   );

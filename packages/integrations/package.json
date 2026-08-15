@@ -5,6 +5,7 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./paystack": "./src/paystack/index.ts",
     "./prembly": "./src/prembly/index.ts"
   },
   "scripts": {

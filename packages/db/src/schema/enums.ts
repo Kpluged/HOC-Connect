@@ -42,3 +42,18 @@ export const applicationDocumentStatus = app.enum(
   "application_document_status",
   ["uploaded", "verified", "rejected"],
 );
+
+export const orderStatus = app.enum("order_status", [
+  "draft",
+  "deposit_pending",
+  "deposit_paid",
+  "balance_pending",
+  "paid_in_full",
+  "cancelled",
+]);
+export const paymentKind = app.enum("payment_kind", ["deposit", "balance"]);
+export const paymentStatus = app.enum("payment_status", [
+  "pending",
+  "succeeded",
+  "failed",
+]);
