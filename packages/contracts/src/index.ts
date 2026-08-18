@@ -176,3 +176,115 @@ export const assignVehicleSchema = z.object({
 export const endShiftSchema = z.object({
   shiftId: z.uuid(),
 });
+
+// --- Milestone 9: dispatch / operations ---
+
+export const tripSourceSchema = z.enum([
+  "manual",
+  "corporate",
+  "api",
+  "rider_future",
+]);
+export const tripStatusSchema = z.enum([
+  "requested",
+  "offered",
+  "assigned",
+  "driver_en_route",
+  "driver_arrived",
+  "in_progress",
+  "completed",
+  "cancelled",
+]);
+export type TripStatus = z.infer<typeof tripStatusSchema>;
+
+/** {lat,lng} in WGS84 degrees, bounded to valid Earth coordinates. */
+export const geoPointSchema = z.object({
+  lat: z.number().min(-90).max(90),
+  lng: z.number().min(-180).max(180),
+});
+export type GeoPoint = z.infer<typeof geoPointSchema>;
+
+export const createTripSchema = z.object({
+  organizationId: z.uuid(),
+  pickupLabel: z.string().trim().min(1),
+  pickup: geoPointSchema,
+  dropoffLabel: z.string().trim().min(1),
+  dropoff: geoPointSchema,
+  source: tripSourceSchema.optional(),
+});
+
+export const assignTripSchema = z.object({
+  tripId: z.uuid(),
+  driverId: z.uuid(),
+  vehicleId: z.uuid(),
+});
+
+/**
+ * The manager-advanceable target states. `requested`/`offered`/`assigned` are
+ * only ever set by create/assign, never by a bare transition; the DB function
+ * enforces the full legal graph regardless.
+ */
+export const tripTransitionTargetSchema = z.enum([
+  "driver_en_route",
+  "driver_arrived",
+  "in_progress",
+  "completed",
+  "cancelled",
+]);
+export const transitionTripSchema = z.object({
+  tripId: z.uuid(),
+  next: tripTransitionTargetSchema,
+});
+
+export const driverOperationalStatusSchema = z.enum([
+  "offline",
+  "available",
+  "on_trip",
+]);
+/** Managers toggle offline/available; on_trip is set by the assign flow only. */
+export const setDriverOperationalStatusSchema = z.object({
+  driverId: z.uuid(),
+  operationalStatus: z.enum(["offline", "available"]),
+});
+
+export const maintenanceSeveritySchema = z.enum([
+  "low",
+  "medium",
+  "high",
+  "critical",
+]);
+export const maintenanceStatusSchema = z.enum([
+  "open",
+  "in_progress",
+  "resolved",
+]);
+
+export const openMaintenanceTicketSchema = z.object({
+  organizationId: z.uuid(),
+  vehicleId: z.uuid(),
+  category: z.string().trim().min(1),
+  severity: maintenanceSeveritySchema,
+  title: z.string().trim().min(1),
+  notes: z.string().trim().min(1).optional(),
+});
+export const updateMaintenanceTicketSchema = z.object({
+  ticketId: z.uuid(),
+  status: maintenanceStatusSchema,
+  notes: z.string().trim().min(1).optional(),
+});
+
+export const logChargingSessionSchema = z
+  .object({
+    organizationId: z.uuid(),
+    vehicleId: z.uuid(),
+    driverId: z.uuid().optional(),
+    locationLabel: z.string().trim().min(1).optional(),
+    energyWh: z.number().int().nonnegative().optional(),
+    costMinor: z.number().int().nonnegative().optional(),
+    currency: z.string().regex(/^[A-Z]{3}$/, "expected a 3-letter ISO-4217 code").optional(),
+  })
+  // Money never travels without its currency (mirrors the DB check constraint).
+  .refine((v) => v.costMinor === undefined || v.currency !== undefined, {
+    message: "currency is required when a cost is provided",
+    path: ["currency"],
+  });

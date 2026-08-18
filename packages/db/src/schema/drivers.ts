@@ -2,6 +2,7 @@ import { sql } from "drizzle-orm";
 import {
   bigint,
   check,
+  index,
   integer,
   pgPolicy,
   text,
@@ -11,8 +12,8 @@ import {
 } from "drizzle-orm/pg-core";
 import { authUid, authUsers, authenticatedRole } from "drizzle-orm/supabase";
 
-import { app, canManageFleetOps, timestamps } from "./_shared";
-import { membershipStatus } from "./enums";
+import { app, canManageFleetOps, geographyPoint, timestamps } from "./_shared";
+import { driverOperationalStatus, membershipStatus } from "./enums";
 import { fleetVehicles } from "./fleet";
 import { profiles } from "./identity";
 import { organizations } from "./organizations";
@@ -42,6 +43,15 @@ export const drivers = app
       premblyStatus: text("prembly_status"),
       licenceReference: text("licence_reference"),
       status: membershipStatus("status").notNull().default("invited"),
+      // Milestone 9: live dispatch state, additive to the M8 columns. The
+      // vetting state (status) and the dispatch state (operationalStatus) are
+      // deliberately separate axes. currentLocation/lastSeenAt stay null until
+      // the driver app (M9b) reports them; demo rows are seeded staff-side.
+      operationalStatus: driverOperationalStatus("operational_status")
+        .notNull()
+        .default("offline"),
+      currentLocation: geographyPoint("current_location"),
+      lastSeenAt: timestamp("last_seen_at", { withTimezone: true }),
       createdByUserId: uuid("created_by_user_id")
         .notNull()
         .references(() => authUsers.id),
@@ -52,6 +62,13 @@ export const drivers = app
         table.organizationId,
         table.profileId,
       ),
+      // Partial GiST index backing the tenant-scoped nearest-driver KNN query
+      // (architecture doc §6) - only available drivers with a known location.
+      index("drivers_available_location_gist")
+        .using("gist", table.currentLocation)
+        .where(
+          sql`${table.operationalStatus} = 'available' and ${table.currentLocation} is not null`,
+        ),
       check(
         "drivers_display_name_not_blank",
         sql`char_length(btrim(${table.displayName})) > 0`,

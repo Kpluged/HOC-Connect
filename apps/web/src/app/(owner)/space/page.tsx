@@ -4,7 +4,6 @@ import Link from "next/link";
 import { OwnerSpaceShell } from "@/components/owner/owner-space-shell";
 import { Chip } from "@/components/ui/chip";
 import { KpiTile } from "@/components/ui/kpi-tile";
-import { MapPanel } from "@/components/ui/map-panel";
 import { Monogram } from "@/components/ui/monogram";
 import { StatBar } from "@/components/ui/stat-bar";
 import { StatusDot } from "@/components/ui/status-dot";
@@ -39,11 +38,17 @@ export default async function OwnerSpaceOverviewPage() {
   if (!organization) return null;
 
   const caller = await getServerCaller();
-  const [driverList, vehicleList, activeShifts] = await Promise.all([
+  const [driverList, vehicleList, activeShifts, tripList] = await Promise.all([
     caller.drivers.listByOrganization({ organizationId: organization.id }),
     caller.vehicles.listByOrganization({ organizationId: organization.id }),
     caller.shifts.listActiveByOrganization({ organizationId: organization.id }),
+    caller.trips.listByOrganization({ organizationId: organization.id }),
   ]);
+
+  const activeRides = tripList.filter(
+    (trip) => trip.status !== "completed" && trip.status !== "cancelled",
+  ).length;
+  const completedRides = tripList.filter((trip) => trip.status === "completed").length;
 
   const statusCounts = {
     active: vehicleList.filter((vehicle) => vehicle.status === "active").length,
@@ -183,24 +188,38 @@ export default async function OwnerSpaceOverviewPage() {
         </div>
 
         <div className="min-w-0 lg:col-span-5">
-          <h2 className="text-sm font-semibold">Coming next</h2>
+          <h2 className="text-sm font-semibold">Dispatch</h2>
           <div className="mt-4 grid gap-4">
-            <MapPanel label="Live dispatch preview">
-              <span className="inline-flex rounded-control bg-surface px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-contrast-medium">
-                Preview · Milestone 9
-              </span>
-              <p className="mt-4 max-w-[34ch] text-sm leading-6 text-contrast-high">
-                Live GPS dispatch, incoming ride requests, and nearest-driver assignment
-                on a real map.
+            <Link
+              className="group block rounded-card border border-contrast-low bg-surface-raised p-6 transition-colors duration-[var(--duration-hover)] hover:border-primary"
+              href="/space/dispatch"
+            >
+              <div className="flex items-center justify-between">
+                <span className="inline-flex rounded-control bg-surface px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-contrast-medium">
+                  Live dispatch
+                </span>
+                {activeRides > 0 ? <StatusDot label={`${activeRides} active`} live /> : null}
+              </div>
+              <div className="mt-5 flex items-end gap-8">
+                <div>
+                  <p className="text-[2.5rem] font-semibold leading-none tabular-nums">{activeRides}</p>
+                  <p className="mt-1 text-xs text-contrast-medium">Active rides</p>
+                </div>
+                <div>
+                  <p className="text-[2.5rem] font-semibold leading-none tabular-nums">{completedRides}</p>
+                  <p className="mt-1 text-xs text-contrast-medium">Completed</p>
+                </div>
+              </div>
+              <p className="mt-5 border-t border-contrast-low pt-4 text-sm font-semibold underline-offset-4 group-hover:underline">
+                Open dispatch →
               </p>
-            </MapPanel>
+            </Link>
             <div className="rounded-card border border-contrast-low bg-frosted p-6 backdrop-blur-xl">
               <span className="inline-flex rounded-control bg-surface px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-contrast-medium">
                 Preview · Milestone 10
               </span>
               <p className="mt-4 max-w-[34ch] text-sm leading-6 text-contrast-high">
-                Earnings, trip history, battery and vehicle health, and maintenance — one
-                fleet-intelligence dashboard.
+                Earnings, payouts, and trip revenue — one fleet-intelligence dashboard.
               </p>
             </div>
           </div>

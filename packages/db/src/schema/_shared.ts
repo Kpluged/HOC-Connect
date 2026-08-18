@@ -1,11 +1,33 @@
 import { sql, type SQL } from "drizzle-orm";
-import { pgSchema, timestamp } from "drizzle-orm/pg-core";
+import { bigint, customType, pgSchema, timestamp } from "drizzle-orm/pg-core";
 
 /**
  * Business tables live in `app`, a non-Data-API-exposed Postgres schema.
  * See docs/HOC-Connect-architecture-and-schema.md section 1.
  */
 export const app = pgSchema("app");
+
+/**
+ * PostGIS geography(Point,4326) columns (Milestone 9). PostGIS is installed
+ * into the dedicated `gis` schema by the 0019 migration - never pinned, never
+ * in `public`. See docs/HOC-Connect-architecture-and-schema.md sections 5-6.
+ *
+ * The `data` contract is intentionally `string`: a raw read of a geography
+ * column returns PostGIS EWKB hex, not a decoded point, and this codebase never
+ * reads it raw across the transport boundary - every dispatch/telemetry query
+ * projects `gis.ST_X`/`gis.ST_Y` to `{lat,lng}` explicitly. Writes likewise go
+ * through raw SQL / the trip lifecycle functions
+ * (`ST_SetSRID(ST_MakePoint(lng,lat),4326)::gis.geography`), never the Drizzle
+ * query builder, so no encoder/decoder is declared here. Typing `data` as the
+ * EWKB string keeps the contract honest rather than promising a `{lat,lng}`
+ * shape reads don't actually return.
+ */
+export const geographyPoint = customType<{ data: string }>({
+  dataType: () => "gis.geography(Point,4326)",
+});
+
+/** Money is always non-negative integer minor units (kobo), never a float. */
+export const moneyMinor = (name: string) => bigint(name, { mode: "number" });
 
 export const timestamps = () => ({
   createdAt: timestamp("created_at", { withTimezone: true })

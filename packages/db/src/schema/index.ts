@@ -6,4 +6,5 @@ export * from "./drivers";
 export * from "./enums";
 export * from "./fleet";
 export * from "./identity";
+export * from "./operations";
 export * from "./organizations";

@@ -63,3 +63,62 @@ export const paymentStatus = app.enum("payment_status", [
   "succeeded",
   "failed",
 ]);
+
+// --- Milestone 9: dispatch / operations ---
+
+/**
+ * The real ride lifecycle (docs/HOC-Connect-architecture-and-schema.md §4).
+ * Legal transitions are enforced by app.transition_trip(); this enum only
+ * declares the vocabulary.
+ */
+export const tripStatus = app.enum("trip_status", [
+  "requested",
+  "offered",
+  "assigned",
+  "driver_en_route",
+  "driver_arrived",
+  "in_progress",
+  "completed",
+  "cancelled",
+]);
+export const tripSource = app.enum("trip_source", [
+  "manual",
+  "corporate",
+  "api",
+  "rider_future",
+]);
+
+/**
+ * A driver's live dispatch availability, distinct from the vetting/enrolment
+ * `membership_status` reused by drivers.status - a driver can be an `active`
+ * member yet `offline` for dispatch. Defaults to offline until the driver app
+ * (M9b) reports availability.
+ */
+export const driverOperationalStatus = app.enum("driver_operational_status", [
+  "offline",
+  "available",
+  "on_trip",
+]);
+
+export const vehicleHealthState = app.enum("vehicle_health_state", [
+  "nominal",
+  "attention",
+  "critical",
+]);
+
+export const chargingStatus = app.enum("charging_status", [
+  "in_progress",
+  "completed",
+]);
+
+export const maintenanceSeverity = app.enum("maintenance_severity", [
+  "low",
+  "medium",
+  "high",
+  "critical",
+]);
+export const maintenanceStatus = app.enum("maintenance_status", [
+  "open",
+  "in_progress",
+  "resolved",
+]);

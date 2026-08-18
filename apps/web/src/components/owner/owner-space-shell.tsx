@@ -5,12 +5,21 @@ import { MarketingFooter } from "@/components/marketing/marketing-footer";
 import { SiteHeader } from "@/components/ui/site-header";
 import { cn } from "@/lib/cn";
 
-type OwnerSpaceSection = "overview" | "drivers" | "fleet";
+type OwnerSpaceSection =
+  | "overview"
+  | "dispatch"
+  | "drivers"
+  | "fleet"
+  | "energy"
+  | "maintenance";
 
 const navItems: { href: string; key: OwnerSpaceSection; label: string }[] = [
   { href: "/space", key: "overview", label: "Overview" },
+  { href: "/space/dispatch", key: "dispatch", label: "Dispatch" },
   { href: "/space/drivers", key: "drivers", label: "Drivers" },
   { href: "/space/fleet", key: "fleet", label: "Fleet" },
+  { href: "/space/energy", key: "energy", label: "Energy" },
+  { href: "/space/maintenance", key: "maintenance", label: "Maintenance" },
 ];
 
 /**
