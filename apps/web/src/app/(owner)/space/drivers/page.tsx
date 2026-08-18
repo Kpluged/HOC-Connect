@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { OwnerSpaceShell } from "@/components/owner/owner-space-shell";
+import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
 import { Field } from "@/components/ui/field";
-import { Monogram } from "@/components/ui/monogram";
 import { getCurrentManagedOrganization } from "@/lib/server/current-organization";
+import { signDriverPhotoUrls } from "@/lib/server/driver-photos";
 import { getServerCaller } from "@/server/trpc/caller";
 
 import { createDriver } from "./actions";
@@ -30,6 +31,7 @@ export default async function OwnerDriversPage() {
   const driverList = await caller.drivers.listByOrganization({
     organizationId: organization.id,
   });
+  const photoUrls = await signDriverPhotoUrls(driverList.map((d) => d.photoPath));
 
   return (
     <OwnerSpaceShell active="drivers" organizationName={organization.name}>
@@ -49,7 +51,10 @@ export default async function OwnerDriversPage() {
                     className="flex items-center gap-3 p-4 transition-colors duration-[var(--duration-hover)] hover:bg-surface"
                     href={`/space/drivers/${driver.id}`}
                   >
-                    <Monogram name={driver.displayName} />
+                    <Avatar
+                      name={driver.displayName}
+                      photoUrl={driver.photoPath ? photoUrls.get(driver.photoPath) : null}
+                    />
                     <div className="min-w-0">
                       <p className="truncate font-semibold">{driver.displayName}</p>
                       <p className="text-xs text-contrast-medium">
@@ -73,7 +78,11 @@ export default async function OwnerDriversPage() {
         <div className="min-w-0 lg:col-span-5">
           <div className="rounded-card border border-contrast-low bg-surface-raised p-6">
             <h2 className="text-sm font-semibold">Add a driver</h2>
-            <form action={createDriver} className="mt-5 grid gap-6">
+            <form
+              action={createDriver}
+              className="mt-5 grid gap-6"
+              encType="multipart/form-data"
+            >
               <input name="organizationId" type="hidden" value={organization.id} />
               <Field id="displayName" label="Name" name="displayName" required />
               <Field id="phone" label="Phone" name="phone" />
@@ -83,6 +92,18 @@ export default async function OwnerDriversPage() {
                 label="Licence reference"
                 name="licenceReference"
               />
+              <div className="grid gap-1.5">
+                <span className="text-sm font-medium">Profile photo</span>
+                <input
+                  accept="image/png,image/jpeg,image/webp"
+                  className="block w-full text-sm text-contrast-medium file:mr-3 file:rounded-control file:border-0 file:bg-primary file:px-4 file:py-2 file:text-sm file:font-semibold file:text-canvas hover:file:cursor-pointer"
+                  name="photo"
+                  type="file"
+                />
+                <span className="text-xs text-contrast-medium">
+                  Optional. JPG, PNG or WebP, up to 5MB.
+                </span>
+              </div>
               <Button className="w-full" type="submit" variant="signal">
                 Add driver
               </Button>

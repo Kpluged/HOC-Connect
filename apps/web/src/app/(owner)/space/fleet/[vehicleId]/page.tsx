@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { MarketingFooter } from "@/components/marketing/marketing-footer";
+import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
 import { DataTable } from "@/components/ui/data-table";
@@ -9,6 +10,7 @@ import { SelectField } from "@/components/ui/field";
 import { SiteHeader } from "@/components/ui/site-header";
 import { getVehicle } from "@/features/catalogue/data";
 import { getCurrentManagedOrganization } from "@/lib/server/current-organization";
+import { signDriverPhotoUrls } from "@/lib/server/driver-photos";
 import { getServerCaller } from "@/server/trpc/caller";
 
 import { assignDriver, endShiftForVehicle } from "../actions";
@@ -47,6 +49,12 @@ export default async function OwnerVehicleDetailPage({
 
   const activeShift = shiftHistory.find((shift) => !shift.endedAt) ?? null;
   const assignableDrivers = orgDrivers.filter((driver) => driver.status === "active");
+  const activeDriver = activeShift
+    ? orgDrivers.find((driver) => driver.id === activeShift.driverId) ?? null
+    : null;
+  const activeDriverPhoto = activeDriver?.photoPath
+    ? (await signDriverPhotoUrls([activeDriver.photoPath])).get(activeDriver.photoPath)
+    : null;
 
   return (
     <main className="min-h-dvh bg-canvas" data-room="light">
@@ -110,13 +118,18 @@ export default async function OwnerVehicleDetailPage({
         <div className="min-w-0 lg:col-span-4 lg:col-start-9">
           <p className="text-sm font-semibold">Driver assignment</p>
           {activeShift ? (
-            <div className="mt-4 border border-contrast-low bg-surface p-6">
+            <div className="mt-4 rounded-card border border-contrast-low bg-surface p-6">
               <p className="text-sm text-contrast-medium">Currently driven by</p>
-              <p className="mt-2 text-lg font-semibold">
-                {orgDrivers.find((driver) => driver.id === activeShift.driverId)?.displayName ??
-                  "Driver"}
-              </p>
-              <p className="mt-1 text-sm text-contrast-medium">
+              <div className="mt-3 flex items-center gap-3">
+                <Avatar
+                  name={activeDriver?.displayName ?? "Driver"}
+                  photoUrl={activeDriverPhoto}
+                />
+                <p className="min-w-0 truncate text-lg font-semibold">
+                  {activeDriver?.displayName ?? "Driver"}
+                </p>
+              </div>
+              <p className="mt-2 text-sm text-contrast-medium">
                 Since {new Date(activeShift.startedAt).toLocaleString()}
               </p>
               <form action={endShiftForVehicle} className="mt-6">

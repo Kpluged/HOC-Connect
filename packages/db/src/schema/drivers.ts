@@ -42,6 +42,9 @@ export const drivers = app
       premblyReference: text("prembly_reference"),
       premblyStatus: text("prembly_status"),
       licenceReference: text("licence_reference"),
+      // Storage path in the private `driver-photos` bucket (org-id/driver-id);
+      // read via a signed URL. Null until a manager uploads a photo.
+      photoPath: text("photo_path"),
       status: membershipStatus("status").notNull().default("invited"),
       // Milestone 9: live dispatch state, additive to the M8 columns. The
       // vetting state (status) and the dispatch state (operationalStatus) are

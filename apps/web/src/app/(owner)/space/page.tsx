@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { OwnerSpaceShell } from "@/components/owner/owner-space-shell";
+import { Avatar } from "@/components/ui/avatar";
 import { Chip } from "@/components/ui/chip";
 import { KpiTile } from "@/components/ui/kpi-tile";
-import { Monogram } from "@/components/ui/monogram";
 import { StatBar } from "@/components/ui/stat-bar";
 import { StatusDot } from "@/components/ui/status-dot";
 import { getVehicle } from "@/features/catalogue/data";
 import { getCurrentManagedOrganization } from "@/lib/server/current-organization";
+import { signDriverPhotoUrls } from "@/lib/server/driver-photos";
 import { getServerCaller } from "@/server/trpc/caller";
 
 export const metadata: Metadata = {
@@ -49,6 +50,12 @@ export default async function OwnerSpaceOverviewPage() {
     (trip) => trip.status !== "completed" && trip.status !== "cancelled",
   ).length;
   const completedRides = tripList.filter((trip) => trip.status === "completed").length;
+
+  const photoUrls = await signDriverPhotoUrls([
+    ...driverList.map((driver) => driver.photoPath),
+    ...activeShifts.map(({ driver }) => driver.photoPath),
+  ]);
+  const photoFor = (path: string | null) => (path ? photoUrls.get(path) : null);
 
   const statusCounts = {
     active: vehicleList.filter((vehicle) => vehicle.status === "active").length,
@@ -94,7 +101,7 @@ export default async function OwnerSpaceOverviewPage() {
                   key={shift.id}
                 >
                   <div className="flex items-center gap-3">
-                    <Monogram name={driver.displayName} />
+                    <Avatar name={driver.displayName} photoUrl={photoFor(driver.photoPath)} />
                     <div className="min-w-0">
                       <p className="truncate font-semibold">{driver.displayName}</p>
                       <p className="text-xs text-contrast-medium">
@@ -166,7 +173,7 @@ export default async function OwnerSpaceOverviewPage() {
                     className="flex items-center gap-3 p-4 transition-colors duration-[var(--duration-hover)] hover:bg-surface"
                     href={`/space/drivers/${driver.id}`}
                   >
-                    <Monogram name={driver.displayName} />
+                    <Avatar name={driver.displayName} photoUrl={photoFor(driver.photoPath)} />
                     <div className="min-w-0">
                       <p className="truncate font-semibold">{driver.displayName}</p>
                       <p className="text-xs text-contrast-medium">

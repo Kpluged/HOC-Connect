@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { OwnerSpaceShell } from "@/components/owner/owner-space-shell";
+import { Avatar } from "@/components/ui/avatar";
 import { Chip } from "@/components/ui/chip";
-import { Monogram } from "@/components/ui/monogram";
 import { getVehicle } from "@/features/catalogue/data";
 import { getCurrentManagedOrganization } from "@/lib/server/current-organization";
+import { signDriverPhotoUrls } from "@/lib/server/driver-photos";
 import { getServerCaller } from "@/server/trpc/caller";
 
 export const metadata: Metadata = {
@@ -31,6 +32,9 @@ export default async function OwnerFleetPage() {
 
   const driverByVehicleId = new Map(
     activeAssignments.map((assignment) => [assignment.vehicle.id, assignment.driver]),
+  );
+  const photoUrls = await signDriverPhotoUrls(
+    activeAssignments.map((assignment) => assignment.driver.photoPath),
   );
 
   return (
@@ -59,7 +63,11 @@ export default async function OwnerFleetPage() {
                 <div className="mt-6 flex items-center justify-between gap-3 border-t border-contrast-low pt-4">
                   {driver ? (
                     <span className="flex min-w-0 items-center gap-2">
-                      <Monogram className="size-8 text-xs" name={driver.displayName} />
+                      <Avatar
+                        name={driver.displayName}
+                        photoUrl={driver.photoPath ? photoUrls.get(driver.photoPath) : null}
+                        size="xs"
+                      />
                       <span className="truncate text-sm">{driver.displayName}</span>
                     </span>
                   ) : (

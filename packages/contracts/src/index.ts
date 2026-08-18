@@ -167,6 +167,12 @@ export const updateDriverStatusSchema = z.object({
   status: membershipStatusSchema,
 });
 
+export const setDriverPhotoPathSchema = z.object({
+  driverId: z.uuid(),
+  // Storage path in the driver-photos bucket, or null to clear the photo.
+  photoPath: z.string().trim().min(1).nullable(),
+});
+
 export const assignVehicleSchema = z.object({
   driverId: z.uuid(),
   organizationId: z.uuid(),

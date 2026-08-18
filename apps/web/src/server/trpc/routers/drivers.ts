@@ -2,6 +2,7 @@ import {
   createDriverSchema,
   membershipStatusSchema,
   setDriverOperationalStatusSchema,
+  setDriverPhotoPathSchema,
   updateDriverStatusSchema,
 } from "@hoc/contracts";
 import { drivers, organizations } from "@hoc/db";
@@ -127,6 +128,40 @@ export const driversRouter = router({
         });
 
         return { operationalStatus: updated.operationalStatus };
+      });
+    }),
+
+  setPhotoPath: protectedProcedure
+    .input(setDriverPhotoPathSchema)
+    .mutation(async ({ ctx, input }) => {
+      return ctx.withRLS(async (tx) => {
+        const [existing] = await tx
+          .select()
+          .from(drivers)
+          .where(eq(drivers.id, input.driverId));
+        if (!existing) throw new TRPCError({ code: "NOT_FOUND" });
+
+        await assertCanManageFleetOps(tx, {
+          organizationId: existing.organizationId,
+        });
+
+        const [updated] = await tx
+          .update(drivers)
+          .set({ photoPath: input.photoPath, updatedAt: new Date() })
+          .where(eq(drivers.id, input.driverId))
+          .returning();
+
+        await writeAuditLog(tx, {
+          action: "driver.set_photo",
+          actorUserId: ctx.userId,
+          afterData: { photoPath: updated.photoPath },
+          beforeData: { photoPath: existing.photoPath },
+          entityId: input.driverId,
+          entityType: "driver",
+          organizationId: existing.organizationId,
+        });
+
+        return { photoPath: updated.photoPath };
       });
     }),
 
