@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { BrandWordmark } from "@/components/ui/brand-wordmark";
-import { CloseIcon, MenuIcon, PersonIcon } from "@/components/ui/icons";
+import { CloseIcon, FleetIcon, MenuIcon, PersonIcon } from "@/components/ui/icons";
 import { vehicles } from "@/features/catalogue/data";
 
 const navigation = [
@@ -97,9 +97,11 @@ function SecondaryPanel({ active, close }: { active: NavigationKey; close: () =>
 
 export function OverlayNav({
   isSignedIn = false,
+  managesOrg = false,
   tone = "default",
 }: {
   isSignedIn?: boolean;
+  managesOrg?: boolean;
   tone?: "default" | "inverse";
 }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -231,6 +233,19 @@ export function OverlayNav({
                       </span>
                       <span aria-hidden="true">›</span>
                     </Link>
+                    {managesOrg ? (
+                      <Link
+                        className="menu-control flex min-h-14 items-center justify-between rounded-card bg-surface px-5 text-left text-base font-semibold"
+                        href="/space"
+                        onClick={close}
+                      >
+                        <span className="inline-flex items-center gap-3">
+                          <FleetIcon className="size-5" />
+                          Owner Space
+                        </span>
+                        <span aria-hidden="true">›</span>
+                      </Link>
+                    ) : null}
                     {isSignedIn ? (
                       <form action="/auth/sign-out" method="post">
                         <button

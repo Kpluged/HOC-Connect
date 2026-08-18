@@ -5,6 +5,7 @@ import { BrandMark } from "@/components/ui/brand-mark";
 import { BrandWordmark } from "@/components/ui/brand-wordmark";
 import { PersonIcon } from "@/components/ui/icons";
 import { OverlayNav } from "@/components/ui/overlay-nav";
+import { getCurrentManagedOrganization } from "@/lib/server/current-organization";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export async function SiteHeader({ overlay = false }: { overlay?: boolean }) {
@@ -13,6 +14,12 @@ export async function SiteHeader({ overlay = false }: { overlay?: boolean }) {
     data: { user },
   } = await supabase.auth.getUser();
   const isSignedIn = Boolean(user);
+  // Only queried for signed-in users; gates the drawer's Owner Space link so
+  // non-managers never see a link to a page that would only show them the
+  // "you don't manage an organization yet" notice.
+  const managesOrg = isSignedIn
+    ? Boolean(await getCurrentManagedOrganization())
+    : false;
 
   if (overlay) {
     return (
@@ -20,7 +27,7 @@ export async function SiteHeader({ overlay = false }: { overlay?: boolean }) {
         <div aria-hidden="true" className="absolute inset-0 border-b border-white/10 bg-gradient-to-b from-black/60 via-black/25 to-transparent backdrop-blur-[2px]" />
         <div className="page-shell relative grid h-24 grid-cols-[1fr_auto_1fr] items-center gap-3">
           <div className="flex items-center gap-3 justify-self-start">
-            <OverlayNav isSignedIn={isSignedIn} tone="inverse" />
+            <OverlayNav isSignedIn={isSignedIn} managesOrg={managesOrg} tone="inverse" />
           </div>
           <Link
             aria-label="HOC Elite Wheels home"
@@ -58,7 +65,7 @@ export async function SiteHeader({ overlay = false }: { overlay?: boolean }) {
           >
             <PersonIcon className="size-5" />
           </Link>
-          <OverlayNav isSignedIn={isSignedIn} />
+          <OverlayNav isSignedIn={isSignedIn} managesOrg={managesOrg} />
         </div>
       </div>
     </header>

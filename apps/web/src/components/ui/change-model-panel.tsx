@@ -88,8 +88,8 @@ export function ChangeModelPanel({ currentSlug }: { currentSlug: string }) {
 
   return (
     <>
-      <div className="page-shell flex items-center gap-3 overflow-x-auto py-6">
-        <div className="flex gap-2">
+      <div className="page-shell flex items-center gap-3 py-6">
+        <div className="flex min-w-0 flex-1 gap-2 overflow-x-auto">
           {bodyTypes.map((bodyType) => (
             <button
               className={`menu-control inline-flex min-h-10 shrink-0 items-center rounded-control border px-4 text-sm font-semibold transition-colors ${
@@ -105,7 +105,7 @@ export function ChangeModelPanel({ currentSlug }: { currentSlug: string }) {
             </button>
           ))}
         </div>
-        <Button className="ml-auto shrink-0" onClick={() => open()} ref={triggerRef} variant="solid">
+        <Button className="shrink-0" onClick={() => open()} ref={triggerRef} variant="solid">
           Change model
         </Button>
       </div>

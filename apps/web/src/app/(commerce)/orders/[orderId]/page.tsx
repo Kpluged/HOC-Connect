@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { MarketingFooter } from "@/components/marketing/marketing-footer";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonLink } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Chip } from "@/components/ui/chip";
 import { DataTable } from "@/components/ui/data-table";
@@ -65,6 +65,19 @@ export default async function OrderDetailPage({
           <p className="mt-6 max-w-[52ch] text-sm leading-6 text-contrast-high">
             {order.pricingNote || "No pricing note recorded."}
           </p>
+
+          {order.status === "paid_in_full" ? (
+            <div className="mt-8 rounded-card border border-contrast-low bg-surface p-6">
+              <p className="font-semibold">Your fleet is provisioned.</p>
+              <p className="mt-2 max-w-[52ch] text-sm leading-6 text-contrast-medium">
+                Manage your drivers, vehicles, and live assignments from your Owner
+                Space.
+              </p>
+              <ButtonLink className="mt-5 w-full sm:w-auto" href="/space" variant="signal">
+                Open workspace
+              </ButtonLink>
+            </div>
+          ) : null}
 
           <div className="mt-10">
             <p className="text-sm font-semibold">Payments</p>

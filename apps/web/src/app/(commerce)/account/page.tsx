@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { MarketingFooter } from "@/components/marketing/marketing-footer";
 import { ButtonLink } from "@/components/ui/button";
 import { SiteHeader } from "@/components/ui/site-header";
+import { getCurrentManagedOrganization } from "@/lib/server/current-organization";
 import { getServerCaller } from "@/server/trpc/caller";
 
 export const metadata: Metadata = {
@@ -12,7 +13,10 @@ export const metadata: Metadata = {
 
 export default async function AccountPage() {
   const caller = await getServerCaller();
-  const profile = await caller.profile.get();
+  const [profile, managedOrganization] = await Promise.all([
+    caller.profile.get(),
+    getCurrentManagedOrganization(),
+  ]);
 
   return (
     <main className="min-h-dvh bg-canvas" data-room="light">
@@ -33,14 +37,40 @@ export default async function AccountPage() {
         </header>
 
         <div className="min-w-0 lg:col-span-5 lg:col-start-8">
-          <p className="text-sm font-semibold">Applications</p>
-          <p className="mt-2 text-sm leading-6 text-contrast-medium">
-            Track the status of your fleet applications and continue any
-            still in progress.
-          </p>
-          <ButtonLink className="mt-6" href="/account/applications" variant="secondary">
-            View applications
-          </ButtonLink>
+          <div className="grid gap-4">
+            {managedOrganization ? (
+              <div className="rounded-card border border-contrast-low bg-surface p-6">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-contrast-medium">
+                  Workspace
+                </p>
+                <p className="mt-3 text-lg font-semibold">{managedOrganization.name}</p>
+                <p className="mt-2 text-sm leading-6 text-contrast-medium">
+                  Manage your drivers, fleet, and live assignments from your Owner
+                  Space.
+                </p>
+                <ButtonLink className="mt-6 w-full sm:w-auto" href="/space" variant="signal">
+                  Open workspace
+                </ButtonLink>
+              </div>
+            ) : null}
+
+            <div className="rounded-card border border-contrast-low p-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-contrast-medium">
+                Applications
+              </p>
+              <p className="mt-3 text-sm leading-6 text-contrast-medium">
+                Track the status of your fleet applications and continue any still in
+                progress.
+              </p>
+              <ButtonLink
+                className="mt-6 w-full sm:w-auto"
+                href="/account/applications"
+                variant="secondary"
+              >
+                View applications
+              </ButtonLink>
+            </div>
+          </div>
         </div>
       </section>
       <MarketingFooter />
