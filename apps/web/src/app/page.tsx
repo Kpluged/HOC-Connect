@@ -16,7 +16,7 @@ const operatingLoop = [
     label: "Discover",
   },
   {
-    copy: "Define fleet size, vehicle mix, livery direction, and the operating package.",
+    copy: "Define fleet size, vehicle mix, and the operating package.",
     label: "Configure & apply",
   },
   {
@@ -139,7 +139,7 @@ export default function Home() {
               </h2>
               <div className="md:self-end md:justify-self-end">
                 <p className="max-w-[38ch] text-base leading-7 text-contrast-high">
-                  The configurator captures the proposed operating city, fleet size, vehicle mix, livery, and package in one reviewable path.
+                  The configurator captures the proposed operating city, fleet size, vehicle mix, and package in one reviewable path.
                 </p>
                 <ButtonLink className="mt-7" href="/configure/city" variant="signal">
                   Begin configuration

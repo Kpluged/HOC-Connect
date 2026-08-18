@@ -2,7 +2,6 @@ export const configurationSteps = [
   { key: "city", label: "City" },
   { key: "size", label: "Fleet size" },
   { key: "mix", label: "Vehicle mix" },
-  { key: "livery", label: "Livery" },
   { key: "package", label: "Package" },
   { key: "review", label: "Review" },
 ] as const;

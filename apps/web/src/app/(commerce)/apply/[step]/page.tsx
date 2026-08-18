@@ -59,7 +59,7 @@ async function IdentityStep({ query }: { query: SearchParams }) {
 
   return (
     <form action={startApplication} className="grid gap-8">
-      {["city", "size", "livery", "package"].map((key) => {
+      {["city", "size", "package"].map((key) => {
         const value = firstParam(query, key);
         return value ? <input key={key} name={key} type="hidden" value={value} /> : null;
       })}

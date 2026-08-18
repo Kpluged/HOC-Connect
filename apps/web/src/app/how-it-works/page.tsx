@@ -16,7 +16,7 @@ const stages = [
     title: "Discover",
   },
   {
-    body: "Capture fleet size, vehicle mix, livery direction, and package in a structured application.",
+    body: "Capture fleet size, vehicle mix, and package in a structured application.",
     number: "02",
     title: "Configure & apply",
   },

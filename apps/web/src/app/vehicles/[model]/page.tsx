@@ -156,7 +156,7 @@ export default async function VehicleDetailPage({
         </h2>
         <div className="lg:col-span-4 lg:self-end">
           <p className="max-w-[38ch] text-base leading-7 text-contrast-high">
-            Continue into the configurator to define the city, fleet size, mix, livery, and package.
+            Continue into the configurator to define the city, fleet size, mix, and package.
           </p>
           <ButtonLink className="mt-7" href={`/configure/city?vehicle=${vehicle.slug}`} variant="signal">
             Start with {vehicle.name}

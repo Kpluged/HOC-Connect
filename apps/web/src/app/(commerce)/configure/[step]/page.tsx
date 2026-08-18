@@ -3,12 +3,11 @@ import { notFound } from "next/navigation";
 
 import { MarketingFooter } from "@/components/marketing/marketing-footer";
 import { Button, ButtonLink } from "@/components/ui/button";
-import { CheckboxGroup, RadioGroup } from "@/components/ui/radio-group";
+import { RadioGroup } from "@/components/ui/radio-group";
 import { ConfigStepRail } from "@/components/ui/config-step-rail";
 import { Field } from "@/components/ui/field";
 import { SiteHeader } from "@/components/ui/site-header";
 import { StickySummary } from "@/components/ui/sticky-summary";
-import { vehicles } from "@/features/catalogue/data";
 import {
   configurationSteps,
   getNextStep,
@@ -16,10 +15,11 @@ import {
   type ConfigurationStep,
 } from "@/features/configurator/data";
 import { getSelectedVehicles, valueOf } from "@/features/configurator/query";
+import { VehicleMixSelector } from "@/features/configurator/vehicle-mix-selector";
 import type { SearchParams } from "@/lib/search-params";
 
 export const metadata: Metadata = {
-  description: "Shape a proposed HOC Elite Wheels fleet in six clear steps.",
+  description: "Shape a proposed HOC Elite Wheels fleet in five clear steps.",
   title: "Fleet configurator",
 };
 
@@ -27,7 +27,6 @@ const editableKeys: Record<ConfigurationStep, string[]> = {
   city: ["city"],
   size: ["size"],
   mix: ["mix"],
-  livery: ["livery"],
   package: ["package"],
   review: [],
 };
@@ -91,44 +90,7 @@ function StepFields({
 
   if (step === "mix") {
     const selected = getSelectedVehicles(query).map((vehicle) => vehicle.slug);
-    return (
-      <CheckboxGroup
-        defaultValues={selected}
-        description="Select one or more of the vehicles below. HOC's confirmed pricing and Lagos availability remain pending."
-        legend="Vehicle mix"
-        name="mix"
-        options={vehicles.map((vehicle) => ({
-          description: vehicle.category,
-          label: vehicle.name,
-          value: vehicle.slug,
-        }))}
-      />
-    );
-  }
-
-  if (step === "livery") {
-    return (
-      <RadioGroup
-        defaultValue={valueOf(query, "livery")}
-        description="Choose a concept direction for review. Production options and requirements are confirmed later."
-        legend="Livery direction"
-        name="livery"
-        options={[
-          {
-            description:
-              "Capture an operator-led colour and identity direction during review.",
-            label: "Operator identity concept",
-            value: "operator",
-          },
-          {
-            description:
-              "Begin from a restrained black, white, and neutral vehicle direction.",
-            label: "Monochrome concept",
-            value: "monochrome",
-          },
-        ]}
-      />
-    );
+    return <VehicleMixSelector selectedSlugs={selected} />;
   }
 
   if (step === "package") {
@@ -154,7 +116,6 @@ function StepFields({
     ["City", valueOf(query, "city") || "Not selected"],
     ["Fleet size", valueOf(query, "size") || "Not selected"],
     ["Vehicle mix", selectedVehicles.map((vehicle) => vehicle.name).join(", ") || "Not selected"],
-    ["Livery", valueOf(query, "livery") === "operator" ? "Operator identity concept" : valueOf(query, "livery") === "monochrome" ? "Monochrome concept" : "Not selected"],
     ["Package", "Pending confirmation"],
     ["Estimated total", "Pending confirmation"],
   ];
@@ -162,10 +123,8 @@ function StepFields({
   const applyQuery = new URLSearchParams();
   const city = valueOf(query, "city");
   const size = valueOf(query, "size");
-  const livery = valueOf(query, "livery");
   if (city) applyQuery.set("city", city);
   if (size) applyQuery.set("size", size);
-  if (livery) applyQuery.set("livery", livery);
   for (const vehicle of selectedVehicles) applyQuery.append("mix", vehicle.slug);
 
   return (
@@ -201,9 +160,8 @@ const stepIntroductions: Record<ConfigurationStep, { eyebrow: string; heading: s
   city: { eyebrow: "01 / City", heading: "Where will the service operate?", copy: "Begin with the proposed operating market. The entry is captured for review; it does not imply current availability." },
   size: { eyebrow: "02 / Fleet size", heading: "Set the starting scale.", copy: "Record the intended number of vehicles without creating unsupported capacity or pricing promises." },
   mix: { eyebrow: "03 / Vehicle mix", heading: "Compose the proposed fleet.", copy: "Select the catalogue directions that fit the service you intend to build." },
-  livery: { eyebrow: "04 / Livery", heading: "Choose an identity direction.", copy: "Capture a visual direction now, then refine it through review and production planning." },
-  package: { eyebrow: "05 / Package", heading: "Hold the commercial choice clearly.", copy: "Package names, contents, and pricing require HOC confirmation, so the interface keeps them explicitly pending." },
-  review: { eyebrow: "06 / Review", heading: "Check the configuration.", copy: "Review what has been captured before continuing into the application, KYC, and payment journey." },
+  package: { eyebrow: "04 / Package", heading: "Hold the commercial choice clearly.", copy: "Package names, contents, and pricing require HOC confirmation, so the interface keeps them explicitly pending." },
+  review: { eyebrow: "05 / Review", heading: "Check the configuration.", copy: "Review what has been captured before continuing into the application, KYC, and payment journey." },
 };
 
 export default async function ConfigurePage({ params, searchParams }: PageProps<"/configure/[step]">) {
@@ -213,6 +171,7 @@ export default async function ConfigurePage({ params, searchParams }: PageProps<
   const stepIndex = configurationSteps.findIndex((item) => item.key === rawStep);
   const nextStep = getNextStep(rawStep);
   const intro = stepIntroductions[rawStep];
+  const isMixStep = rawStep === "mix";
   const selectedVehicles = getSelectedVehicles(query);
   const summaryRows = [
     { label: "City", value: valueOf(query, "city") || "Pending" },
@@ -241,7 +200,7 @@ export default async function ConfigurePage({ params, searchParams }: PageProps<
           <p className="mt-6 text-sm leading-6 text-contrast-high">{intro.copy}</p>
         </header>
 
-        <div className="min-w-0 lg:col-span-3">
+        <div className={`min-w-0 ${isMixStep ? "lg:col-span-6" : "lg:col-span-3"}`}>
           {nextStep ? (
             <form action={`/configure/${nextStep}`} className="grid gap-8" method="get">
               <HiddenQueryFields query={query} step={rawStep} />
@@ -255,9 +214,11 @@ export default async function ConfigurePage({ params, searchParams }: PageProps<
           )}
         </div>
 
-        <div className="min-w-0 lg:col-span-3">
-          <StickySummary heading="Configuration" rows={summaryRows} />
-        </div>
+        {isMixStep ? null : (
+          <div className="min-w-0 lg:col-span-3">
+            <StickySummary heading="Configuration" rows={summaryRows} />
+          </div>
+        )}
       </section>
       <MarketingFooter />
     </main>

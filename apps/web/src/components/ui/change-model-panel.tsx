@@ -114,7 +114,8 @@ export function ChangeModelPanel({ currentSlug }: { currentSlug: string }) {
         {isOpen ? (
           <motion.div
             animate={{ opacity: 1 }}
-            className="fixed inset-0 z-50 overflow-y-auto bg-canvas text-primary"
+            className="fixed inset-0 z-50 overflow-y-auto bg-canvas text-primary lg:overflow-hidden"
+            data-lenis-prevent
             data-room="light"
             exit={{ opacity: 0 }}
             initial={{ opacity: 0 }}
@@ -123,7 +124,7 @@ export function ChangeModelPanel({ currentSlug }: { currentSlug: string }) {
             <div
               aria-label="Change model"
               aria-modal="true"
-              className="relative min-h-dvh"
+              className="relative min-h-dvh lg:h-full lg:min-h-0"
               ref={panelRef}
               role="dialog"
             >
@@ -137,10 +138,10 @@ export function ChangeModelPanel({ currentSlug }: { currentSlug: string }) {
                 <CloseIcon />
               </button>
 
-              <div className="grid min-h-dvh lg:grid-cols-[28vw_1fr]">
+              <div className="grid min-h-dvh lg:h-full lg:min-h-0 lg:grid-cols-[28vw_1fr]">
                 <motion.section
                   animate={{ x: 0 }}
-                  className="flex flex-col gap-2 border-b border-contrast-low bg-surface px-6 py-24 sm:px-10 lg:h-full lg:overflow-y-auto lg:border-b-0 lg:border-r lg:py-28"
+                  className="flex flex-col gap-2 border-b border-contrast-low bg-surface px-6 py-24 sm:px-10 lg:h-full lg:min-h-0 lg:overflow-y-auto lg:border-b-0 lg:border-r lg:py-28"
                   exit={{ x: "-100%" }}
                   initial={{ x: "-100%" }}
                   transition={{ duration: 0.38, ease }}
@@ -173,7 +174,7 @@ export function ChangeModelPanel({ currentSlug }: { currentSlug: string }) {
 
                 <motion.section
                   animate={{ x: 0 }}
-                  className="px-6 py-10 sm:px-10 lg:h-full lg:overflow-y-auto lg:px-12 lg:py-16"
+                  className="px-6 py-10 sm:px-10 lg:h-full lg:min-h-0 lg:overflow-y-auto lg:px-12 lg:py-16"
                   exit={{ x: "-100%" }}
                   initial={{ x: "-100%" }}
                   transition={{ delay: 0.05, duration: 0.42, ease }}

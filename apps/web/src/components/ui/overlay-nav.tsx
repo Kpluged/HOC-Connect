@@ -18,7 +18,7 @@ const navigation = [
 
 type NavigationKey = (typeof navigation)[number]["key"];
 
-const configurationSteps = ["City", "Fleet size", "Vehicle mix", "Livery", "Package", "Review"];
+const configurationSteps = ["City", "Fleet size", "Vehicle mix", "Package", "Review"];
 const operatingStages = ["Discover", "Configure & apply", "Approve & provision", "Operate & earn"];
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -61,7 +61,7 @@ function SecondaryPanel({ active, close }: { active: NavigationKey; close: () =>
     return (
       <div className="flex min-h-full flex-col p-6 sm:p-8 lg:p-10">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-contrast-medium">Fleet configurator</p>
-        <h2 className="mt-5 max-w-[11ch] text-4xl font-semibold leading-[0.95] tracking-[-0.045em]">Six decisions. One reviewable path.</h2>
+        <h2 className="mt-5 max-w-[11ch] text-4xl font-semibold leading-[0.95] tracking-[-0.045em]">Five decisions. One reviewable path.</h2>
         <ol className="mt-12 divide-y divide-contrast-low border-y border-contrast-low">
           {configurationSteps.map((step, index) => (
             <li className="flex min-h-14 items-center gap-5 text-sm" key={step}>
