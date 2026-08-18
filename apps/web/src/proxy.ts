@@ -2,7 +2,7 @@ import { getServerEnv } from "@hoc/config/server";
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const protectedPrefixes = ["/apply", "/account", "/admin", "/orders"];
+const protectedPrefixes = ["/apply", "/account", "/admin", "/orders", "/space"];
 
 /**
  * Optimistic-only: redirects unauthenticated visitors and refreshes the

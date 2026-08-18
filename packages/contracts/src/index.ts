@@ -151,3 +151,28 @@ export const allocateVehicleSchema = z.object({
   vehicleModelSlug: z.string().min(1),
   vin: vinSchema,
 });
+
+export const membershipStatusSchema = z.enum(["invited", "active", "disabled"]);
+export type MembershipStatus = z.infer<typeof membershipStatusSchema>;
+
+export const createDriverSchema = z.object({
+  displayName: z.string().trim().min(1),
+  licenceReference: z.string().trim().min(1).optional(),
+  organizationId: z.uuid(),
+  phone: z.string().trim().min(1).optional(),
+});
+
+export const updateDriverStatusSchema = z.object({
+  driverId: z.uuid(),
+  status: membershipStatusSchema,
+});
+
+export const assignVehicleSchema = z.object({
+  driverId: z.uuid(),
+  organizationId: z.uuid(),
+  vehicleId: z.uuid(),
+});
+
+export const endShiftSchema = z.object({
+  shiftId: z.uuid(),
+});

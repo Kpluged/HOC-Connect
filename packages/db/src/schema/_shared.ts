@@ -29,3 +29,18 @@ export const canViewOrg = (organizationId: SQL | unknown): SQL =>
 
 export const canManageOrg = (organizationId: SQL | unknown): SQL =>
   sql`${isHocStaff} or (select private.has_org_role(${organizationId}, array['owner']::text[]))`;
+
+/**
+ * Broader than canManageOrg (owner-only, reserved for org settings/
+ * membership management) - fleet operations (drivers, shifts, vehicle
+ * assignment) are legitimately a dispatcher's job too. First helper in
+ * the codebase to actually exercise the 'dispatcher' role.
+ *
+ * Wrapped in its own outer parens (unlike canManageOrg) because this one
+ * is used compounded with `and` at some call sites (e.g. shifts' insert
+ * policy) - `A or B and C` parses as `A or (B and C)` in SQL, which would
+ * let staff bypass the eligibility EXISTS checks entirely via the OR
+ * short-circuit. Caught by inspecting generated SQL before applying it.
+ */
+export const canManageFleetOps = (organizationId: SQL | unknown): SQL =>
+  sql`(${isHocStaff} or (select private.has_org_role(${organizationId}, array['owner','dispatcher']::text[])))`;

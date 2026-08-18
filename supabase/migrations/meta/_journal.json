@@ -43,6 +43,13 @@
       "when": 1786824898803,
       "tag": "0012_vehicles_table",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1787045083174,
+      "tag": "0015_drivers_shifts_audit_tables",
+      "breakpoints": true
     }
   ]
 }

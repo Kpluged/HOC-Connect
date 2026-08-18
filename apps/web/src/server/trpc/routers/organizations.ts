@@ -1,5 +1,5 @@
 import { organizationMemberships, organizations } from "@hoc/db";
-import { eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { z } from "zod";
 
 import { protectedProcedure, router } from "../trpc";
@@ -48,6 +48,31 @@ export const organizationsRouter = router({
           eq(organizations.id, organizationMemberships.organizationId),
         )
         .where(eq(organizationMemberships.userId, ctx.userId)),
+    );
+  }),
+
+  /**
+   * Organizations this user actively manages fleet ops for (owner or
+   * dispatcher) - powers the (owner)/space layout's org resolution.
+   * Deliberately narrower than getMine, which includes every membership
+   * role (e.g. driver) regardless of management ability.
+   */
+  listManaged: protectedProcedure.query(async ({ ctx }) => {
+    return ctx.withRLS((tx) =>
+      tx
+        .select({ organization: organizations })
+        .from(organizationMemberships)
+        .innerJoin(
+          organizations,
+          eq(organizations.id, organizationMemberships.organizationId),
+        )
+        .where(
+          and(
+            eq(organizationMemberships.userId, ctx.userId),
+            eq(organizationMemberships.status, "active"),
+            inArray(organizationMemberships.role, ["owner", "dispatcher"]),
+          ),
+        ),
     );
   }),
 });

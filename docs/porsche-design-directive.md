@@ -254,15 +254,20 @@ disconnected apps.
   persistent next actions.
 - **Milestone 7 (vehicle provisioning)** — vehicle-first presentation over
   inventory-table-first, where possible.
-- **Milestone 8 (driver management)** — retain the visual system, prioritise
-  speed and clarity.
-- **Milestone 9 (dispatch)** — the premium dark operational environment
-  already established; don't force public-page styling onto a live control
-  surface.
-- **Milestone 10 (earnings)** — translate the precision, not the product-page
-  composition.
-- **Milestone 11 (maintenance/energy)** — vehicle-specific views stay
-  automotive and visual.
+- **Milestone 8 (driver management & Owner Space)** — retain the visual
+  system, prioritise speed and clarity.
+- **Milestone 9 (dispatch, GPS, ride flows)** — the premium dark
+  operational environment already established; don't force public-page
+  styling onto a live control surface.
+- **Milestone 10 (fleet intelligence dashboard — earnings, battery/vehicle
+  health, maintenance, unified)** — translate the precision, not the
+  product-page composition; vehicle-specific views stay automotive and
+  visual. Combines what were previously separate "earnings" and
+  "maintenance/energy" milestones into one cohesive dashboard, per the
+  strategic MVP enhancement decision.
+- **Milestone 11 (marketplace lease flow)** — draws from the same
+  configurator/summary hierarchy as Milestone 6's buy flow; a lease vs.
+  buy toggle is a first-class choice, not a buried option.
 - **Milestone 12 (HOC Console)** — dense information is fine; generic
   admin-template styling is not.
 - **Milestones 13–20** — same system throughout. Any new customer-facing
