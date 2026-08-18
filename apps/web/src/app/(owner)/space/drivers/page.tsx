@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { MarketingFooter } from "@/components/marketing/marketing-footer";
+import { OwnerSpaceShell } from "@/components/owner/owner-space-shell";
 import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
-import { DataTable } from "@/components/ui/data-table";
 import { Field } from "@/components/ui/field";
-import { SiteHeader } from "@/components/ui/site-header";
+import { Monogram } from "@/components/ui/monogram";
 import { getCurrentManagedOrganization } from "@/lib/server/current-organization";
 import { getServerCaller } from "@/server/trpc/caller";
 
@@ -33,76 +32,64 @@ export default async function OwnerDriversPage() {
   });
 
   return (
-    <main className="min-h-dvh bg-canvas" data-room="light">
-      <SiteHeader />
-      <section className="page-shell py-16 lg:py-24">
-        <header>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-contrast-medium">
-            Owner Space
-          </p>
-          <h1 className="mt-5 text-[clamp(2.5rem,5vw,4.5rem)] font-semibold leading-[0.92] tracking-[-0.05em]">
-            Drivers
-          </h1>
-        </header>
+    <OwnerSpaceShell active="drivers" organizationName={organization.name}>
+      <div className="grid gap-12 lg:grid-cols-12">
+        <div className="min-w-0 lg:col-span-7">
+          <div className="flex items-baseline justify-between">
+            <h2 className="text-sm font-semibold">Roster</h2>
+            <span className="tabular-nums text-sm text-contrast-medium">
+              {driverList.length} {driverList.length === 1 ? "driver" : "drivers"}
+            </span>
+          </div>
+          {driverList.length > 0 ? (
+            <ul className="mt-4 divide-y divide-contrast-low overflow-hidden rounded-card border border-contrast-low">
+              {driverList.map((driver) => (
+                <li key={driver.id}>
+                  <Link
+                    className="flex items-center gap-3 p-4 transition-colors duration-[var(--duration-hover)] hover:bg-surface"
+                    href={`/space/drivers/${driver.id}`}
+                  >
+                    <Monogram name={driver.displayName} />
+                    <div className="min-w-0">
+                      <p className="truncate font-semibold">{driver.displayName}</p>
+                      <p className="text-xs text-contrast-medium">
+                        {driver.phone || "No phone on file"}
+                      </p>
+                    </div>
+                    <Chip className="ml-auto" variant={statusVariant[driver.status]}>
+                      {driver.status}
+                    </Chip>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-4 rounded-card border border-contrast-low bg-surface p-6 text-sm text-contrast-medium">
+              No drivers added yet. Add your first driver using the form.
+            </p>
+          )}
+        </div>
 
-        <div className="mt-12 grid gap-12 lg:grid-cols-12">
-          <div className="min-w-0 lg:col-span-5">
-            <p className="text-sm font-semibold">Add a driver</p>
-            <form action={createDriver} className="mt-4 grid gap-6">
+        <div className="min-w-0 lg:col-span-5">
+          <div className="rounded-card border border-contrast-low bg-surface-raised p-6">
+            <h2 className="text-sm font-semibold">Add a driver</h2>
+            <form action={createDriver} className="mt-5 grid gap-6">
               <input name="organizationId" type="hidden" value={organization.id} />
               <Field id="displayName" label="Name" name="displayName" required />
               <Field id="phone" label="Phone" name="phone" />
               <Field
-                description="Optional - if the driver has already completed a licence check."
+                description="Optional — if the driver has already completed a licence check."
                 id="licenceReference"
                 label="Licence reference"
                 name="licenceReference"
               />
-              <Button className="justify-self-start" type="submit" variant="signal">
+              <Button className="w-full" type="submit" variant="signal">
                 Add driver
               </Button>
             </form>
           </div>
-
-          <div className="min-w-0 lg:col-span-7">
-            <p className="text-sm font-semibold">Roster</p>
-            {driverList.length > 0 ? (
-              <div className="mt-4">
-                <DataTable
-                  caption="Drivers in this organization"
-                  columns={[
-                    { key: "name", label: "Name" },
-                    { key: "phone", label: "Phone" },
-                    { key: "status", label: "Status" },
-                    { align: "right", key: "action", label: "" },
-                  ]}
-                  rows={driverList.map((driver) => ({
-                    id: driver.id,
-                    values: {
-                      action: (
-                        <Link
-                          className="text-sm font-semibold underline-offset-4 hover:underline"
-                          href={`/space/drivers/${driver.id}`}
-                        >
-                          View
-                        </Link>
-                      ),
-                      name: driver.displayName,
-                      phone: driver.phone || "-",
-                      status: (
-                        <Chip variant={statusVariant[driver.status]}>{driver.status}</Chip>
-                      ),
-                    },
-                  }))}
-                />
-              </div>
-            ) : (
-              <p className="mt-4 text-sm text-contrast-medium">No drivers added yet.</p>
-            )}
-          </div>
         </div>
-      </section>
-      <MarketingFooter />
-    </main>
+      </div>
+    </OwnerSpaceShell>
   );
 }
