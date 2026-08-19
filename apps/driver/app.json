@@ -9,7 +9,10 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "infoPlist": {
-        "UIBackgroundModes": ["location", "fetch"]
+        "UIBackgroundModes": [
+          "location",
+          "fetch"
+        ]
       }
     },
     "android": {

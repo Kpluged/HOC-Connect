@@ -8,6 +8,7 @@
     "@expo/ui": "~57.0.10",
     "@hoc/contracts": "workspace:*",
     "@hoc/design-tokens": "workspace:*",
+    "@rnmapbox/maps": "^10.3.5",
     "@supabase/supabase-js": "^2.112.3",
     "expo": "~57.0.12",
     "expo-constants": "~57.0.10",

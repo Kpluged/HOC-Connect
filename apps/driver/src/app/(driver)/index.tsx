@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
@@ -27,8 +28,16 @@ const STATUS_LABEL: Record<string, string> = {
 };
 const TERMINAL = new Set(['completed', 'cancelled']);
 
+const ACTIVE_STATUS_LABEL: Record<string, string> = {
+  assigned: 'Assigned',
+  driver_en_route: 'En route',
+  driver_arrived: 'Arrived',
+  in_progress: 'In progress',
+};
+
 export default function DriverHome() {
   const t = useTheme();
+  const router = useRouter();
   const [me, setMe] = useState<DriverMe>(null);
   const [trips, setTrips] = useState<DriverTrip[]>([]);
   const [loading, setLoading] = useState(true);
@@ -281,12 +290,35 @@ export default function DriverHome() {
               </View>
             ) : null}
 
-            <View style={[styles.card, { backgroundColor: t.surface, borderColor: t.border }]}>
-              <Text style={[styles.metric, { color: t.primary }]}>{activeTrips.length}</Text>
-              <Text style={[styles.body, { color: t.muted }]}>
-                {activeTrips.length === 1 ? 'active ride' : 'active rides'}
-              </Text>
-            </View>
+            {activeTrips.length > 0 ? (
+              <View style={styles.section}>
+                <Text style={[styles.sectionTitle, { color: t.muted }]}>
+                  {activeTrips.length === 1 ? 'Active ride' : `Active rides (${activeTrips.length})`}
+                </Text>
+                {activeTrips.map((trip) => (
+                  <Pressable
+                    key={trip.id}
+                    onPress={() => router.push({ pathname: '/trip/[tripId]', params: { tripId: trip.id } })}
+                    style={({ pressed }) => [
+                      styles.card,
+                      { backgroundColor: t.surface, borderColor: t.border, opacity: pressed ? 0.9 : 1 },
+                    ]}
+                  >
+                    <Text style={[styles.tripStatus, { color: t.signal }]}>
+                      {ACTIVE_STATUS_LABEL[trip.status] ?? trip.status}
+                    </Text>
+                    <Text style={[styles.tripRoute, { color: t.primary }]} numberOfLines={1}>
+                      {trip.pickupLabel} → {trip.dropoffLabel}
+                    </Text>
+                    <Text style={[styles.tripHint, { color: t.muted }]}>Tap to open the trip</Text>
+                  </Pressable>
+                ))}
+              </View>
+            ) : (
+              <View style={[styles.card, { backgroundColor: t.surface, borderColor: t.border }]}>
+                <Text style={[styles.body, { color: t.muted }]}>No active rides right now.</Text>
+              </View>
+            )}
 
             <Text style={[styles.note, { color: t.muted }]}>Pull down to refresh.</Text>
           </>
@@ -325,7 +357,11 @@ const styles = StyleSheet.create({
   card: { borderRadius: 16, borderWidth: 1, gap: 4, padding: 20 },
   cardTitle: { fontFamily: 'Inter_600SemiBold', fontSize: 16 },
   body: { fontFamily: 'Inter_400Regular', fontSize: 15, lineHeight: 22 },
-  metric: { fontFamily: 'Inter_700Bold', fontSize: 40, letterSpacing: -1.5 },
+  section: { gap: 12 },
+  sectionTitle: { fontFamily: 'Inter_600SemiBold', fontSize: 13, letterSpacing: 0.3 },
+  tripStatus: { fontFamily: 'Inter_700Bold', fontSize: 12, letterSpacing: 1, textTransform: 'uppercase' },
+  tripRoute: { fontFamily: 'Inter_600SemiBold', fontSize: 16, marginTop: 4 },
+  tripHint: { fontFamily: 'Inter_400Regular', fontSize: 12, marginTop: 2 },
   note: { fontFamily: 'Inter_400Regular', fontSize: 13, lineHeight: 20 },
   retry: { marginTop: 12 },
   retryText: { fontFamily: 'Inter_600SemiBold', fontSize: 15 },
