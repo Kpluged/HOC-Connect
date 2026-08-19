@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
+import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
 import type { MapMarker } from "@/components/ui/map-canvas";
@@ -59,12 +60,14 @@ export function DispatchBoard({
   drivers,
   assignableDrivers,
   vehicles,
+  driverPhotos,
 }: {
   organizationId: string;
   trips: DispatchTrip[];
   drivers: DispatchDriver[];
   assignableDrivers: AssignableDriver[];
   vehicles: AssignableVehicle[];
+  driverPhotos: Record<string, string>;
 }) {
   const router = useRouter();
   // Coordinates are editable strings so keyboard users can set a ride without
@@ -216,7 +219,13 @@ export function DispatchBoard({
               </p>
             ) : (
               activeTrips.map((trip) => (
-                <TripCard assignableDrivers={assignableDrivers} key={trip.id} trip={trip} vehicles={vehicles} />
+                <TripCard
+                  assignableDrivers={assignableDrivers}
+                  driverPhotos={driverPhotos}
+                  key={trip.id}
+                  trip={trip}
+                  vehicles={vehicles}
+                />
               ))
             )}
           </div>
@@ -260,15 +269,18 @@ function TripCard({
   trip,
   assignableDrivers,
   vehicles,
+  driverPhotos,
 }: {
   trip: DispatchTrip;
   assignableDrivers: AssignableDriver[];
   vehicles: AssignableVehicle[];
+  driverPhotos: Record<string, string>;
 }) {
   const needsAssignment = trip.status === "requested" || trip.status === "offered";
   const next = NEXT_STATUS[trip.status];
   const available = assignableDrivers.filter((d) => d.operationalStatus === "available");
   const canAssign = available.length > 0 && vehicles.length > 0;
+  const vehicleLabel = trip.vehiclePlate ?? trip.vehicleModel ?? null;
 
   return (
     <article className="rounded-card border border-contrast-low bg-surface p-5">
@@ -277,10 +289,23 @@ function TripCard({
           <p className="truncate text-sm font-semibold">
             {trip.pickupLabel} → {trip.dropoffLabel}
           </p>
-          <p className="mt-1 text-xs text-contrast-medium">
-            {trip.driverName ? `${trip.driverName}` : "Unassigned"}
-            {trip.vehiclePlate ? ` · ${trip.vehiclePlate}` : trip.vehicleModel ? ` · ${trip.vehicleModel}` : ""}
-          </p>
+          {trip.driverName ? (
+            <span className="mt-2 flex items-center gap-2">
+              <Avatar
+                name={trip.driverName}
+                photoUrl={trip.driverId ? driverPhotos[trip.driverId] : null}
+                size="xs"
+              />
+              <span className="min-w-0 truncate text-xs text-contrast-medium">
+                {trip.driverName}
+                {vehicleLabel ? ` · ${vehicleLabel}` : ""}
+              </span>
+            </span>
+          ) : (
+            <p className="mt-1 text-xs text-contrast-medium">
+              Unassigned{vehicleLabel ? ` · ${vehicleLabel}` : ""}
+            </p>
+          )}
         </div>
         <span className="shrink-0 rounded-control bg-canvas px-2.5 py-1 text-xs font-semibold">
           {STATUS_LABEL[trip.status] ?? trip.status}

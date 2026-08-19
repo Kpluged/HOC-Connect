@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { DispatchBoard } from "@/components/owner/dispatch-board";
 import { OwnerSpaceShell } from "@/components/owner/owner-space-shell";
 import { getCurrentManagedOrganization } from "@/lib/server/current-organization";
+import { signDriverPhotoUrls } from "@/lib/server/driver-photos";
 import { getServerCaller } from "@/server/trpc/caller";
 
 export const metadata: Metadata = {
@@ -28,6 +29,17 @@ export default async function DispatchPage() {
     operationalStatus: driver.operationalStatus,
   }));
 
+  // Sign each driver's photo once and key it by driver id, so the board can
+  // show avatars on assigned trip cards.
+  const signedPhotos = await signDriverPhotoUrls(
+    driverRoster.map((driver) => driver.photoPath),
+  );
+  const driverPhotos: Record<string, string> = {};
+  for (const driver of driverRoster) {
+    const url = driver.photoPath ? signedPhotos.get(driver.photoPath) : undefined;
+    if (url) driverPhotos[driver.id] = url;
+  }
+
   const vehicles = vehicleList
     .filter((vehicle) => vehicle.status === "delivered" || vehicle.status === "active")
     .map((vehicle) => ({
@@ -41,6 +53,7 @@ export default async function DispatchPage() {
     <OwnerSpaceShell active="dispatch" organizationName={organization.name}>
       <DispatchBoard
         assignableDrivers={assignableDrivers}
+        driverPhotos={driverPhotos}
         drivers={dispatchDrivers}
         organizationId={organization.id}
         trips={trips}
