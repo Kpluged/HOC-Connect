@@ -9,6 +9,7 @@
     "@hoc/contracts": "workspace:*",
     "@hoc/design-tokens": "workspace:*",
     "@rnmapbox/maps": "^10.3.5",
+    "@sentry/react-native": "~7.11.0",
     "@supabase/supabase-js": "^2.112.3",
     "expo": "~57.0.12",
     "expo-constants": "~57.0.10",

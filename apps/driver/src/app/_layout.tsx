@@ -21,8 +21,10 @@ import { useEffect, useState } from 'react';
 import { useColorScheme } from 'react-native';
 
 import '@/lib/location'; // registers the background location task at app entry
+import { Sentry, initSentry } from '@/lib/sentry';
 import { supabase } from '@/lib/supabase';
 
+initSentry();
 void SplashScreen.preventAutoHideAsync();
 
 const lightTheme: Theme = {
@@ -51,7 +53,7 @@ const darkTheme: Theme = {
   },
 };
 
-export default function RootLayout() {
+function RootLayout() {
   const colorScheme = useColorScheme();
   const router = useRouter();
   const segments = useSegments();
@@ -96,3 +98,6 @@ export default function RootLayout() {
     </ThemeProvider>
   );
 }
+
+// Sentry.wrap adds error-boundary + touch/navigation breadcrumbs at the root.
+export default Sentry.wrap(RootLayout);
