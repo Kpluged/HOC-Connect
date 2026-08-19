@@ -152,6 +152,24 @@ export const tripsRouter = router({
       });
     }),
 
+  // Driver-facing (Milestone 9b): the signed-in driver's own rides (offers +
+  // active + recent). RLS scopes a driver to trips assigned/offered to them.
+  mine: protectedProcedure.query(async ({ ctx }) =>
+    ctx.withRLS((tx) =>
+      tx.execute<TripRow>(sql`
+        select ${tripReturning}
+        from app.trips t
+        where t.driver_id in (
+          select id from app.drivers where profile_id = ${ctx.userId}
+        )
+        order by
+          (case when t.status in ('completed', 'cancelled') then 1 else 0 end),
+          t.requested_at desc
+        limit 30
+      `),
+    ),
+  ),
+
   // Driver-facing (Milestone 9b): accept/decline an offered ride. Authorization
   // (the offered driver only) is enforced inside the SECURITY DEFINER function.
   accept: protectedProcedure

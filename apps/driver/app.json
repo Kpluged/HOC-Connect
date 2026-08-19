@@ -29,7 +29,8 @@
           "image": "./assets/images/hoc-logo.png",
           "imageWidth": 112
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true,

@@ -166,6 +166,35 @@ export const driversRouter = router({
       });
     }),
 
+  // Driver-facing (Milestone 9b): the signed-in driver's own record, resolved
+  // by profile. RLS lets a driver read only their own row.
+  me: protectedProcedure.query(async ({ ctx }) => {
+    const rows = await ctx.withRLS((tx) =>
+      tx.execute<{
+        id: string;
+        displayName: string;
+        operationalStatus: string;
+        organizationId: string;
+        photoPath: string | null;
+        lat: number | null;
+        lng: number | null;
+      }>(sql`
+        select
+          d.id,
+          d.display_name as "displayName",
+          d.operational_status::text as "operationalStatus",
+          d.organization_id as "organizationId",
+          d.photo_path as "photoPath",
+          gis.st_y(d.current_location::gis.geometry) as lat,
+          gis.st_x(d.current_location::gis.geometry) as lng
+        from app.drivers d
+        where d.profile_id = ${ctx.userId}
+        limit 1
+      `),
+    );
+    return rows[0] ?? null;
+  }),
+
   // Driver-facing (Milestone 9b): the signed-in driver reports their own
   // position + availability. The SECURITY DEFINER function only ever mutates the
   // caller's own driver row and broadcasts the move to the org dispatch board.
