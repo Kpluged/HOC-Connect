@@ -15,6 +15,7 @@ import {
   requestLocationPermissions,
   startLocationTracking,
 } from '@/lib/location';
+import { subscribeToOffers } from '@/lib/realtime';
 import { supabase } from '@/lib/supabase';
 import { useTheme } from '@/lib/theme';
 import { api, type DriverMe, type DriverTrip } from '@/lib/trpc';
@@ -35,6 +36,7 @@ export default function DriverHome() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+  const [acting, setActing] = useState<string | null>(null);
   // Tracks whether we've already resumed streaming for a session that the
   // server still considers online, so re-fetches don't restart it repeatedly.
   const resumed = useRef(false);
@@ -65,6 +67,29 @@ export default function DriverHome() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     void load();
   }, [load]);
+
+  // Live offers: a broadcast on the driver's private topic re-fetches, which
+  // surfaces the offered trip as an accept/decline card.
+  useEffect(() => subscribeToOffers(() => void load()), [load]);
+
+  const respond = useCallback(
+    async (tripId: string, action: 'accept' | 'decline') => {
+      setActing(tripId);
+      setNotice(null);
+      try {
+        if (action === 'accept') await api.acceptOffer(tripId);
+        else await api.declineOffer(tripId);
+        await load();
+      } catch (caught) {
+        setNotice(
+          caught instanceof Error ? caught.message : 'Could not respond to the offer. Try again.',
+        );
+      } finally {
+        setActing(null);
+      }
+    },
+    [load],
+  );
 
   const goOnline = useCallback(async () => {
     setBusy(true);
@@ -102,7 +127,10 @@ export default function DriverHome() {
     }
   }, [load]);
 
-  const activeTrips = trips.filter((trip) => !TERMINAL.has(trip.status));
+  const offers = trips.filter((trip) => trip.status === 'offered');
+  const activeTrips = trips.filter(
+    (trip) => !TERMINAL.has(trip.status) && trip.status !== 'offered',
+  );
   const status = me?.operationalStatus ?? 'offline';
   const isOnTrip = status === 'on_trip';
   const isOnline = status === 'available' || status === 'on_trip';
@@ -161,6 +189,54 @@ export default function DriverHome() {
                 {STATUS_LABEL[status] ?? status}
               </Text>
             </View>
+
+            {/* Ride offers — the live, actionable moment: Guards-Red signal. */}
+            {offers.map((offer) => (
+              <View
+                key={offer.id}
+                style={[styles.offer, { backgroundColor: t.surface, borderColor: t.signal }]}
+              >
+                <Text style={[styles.offerEyebrow, { color: t.signal }]}>New ride offer</Text>
+                <View style={styles.offerLeg}>
+                  <View style={[styles.legDot, { backgroundColor: t.primary }]} />
+                  <Text style={[styles.legText, { color: t.primary }]} numberOfLines={1}>
+                    {offer.pickupLabel}
+                  </Text>
+                </View>
+                <View style={styles.offerLeg}>
+                  <View style={[styles.legDot, { backgroundColor: t.signal }]} />
+                  <Text style={[styles.legText, { color: t.primary }]} numberOfLines={1}>
+                    {offer.dropoffLabel}
+                  </Text>
+                </View>
+                <View style={styles.offerActions}>
+                  <Pressable
+                    disabled={acting === offer.id}
+                    onPress={() => void respond(offer.id, 'decline')}
+                    style={({ pressed }) => [
+                      styles.declineBtn,
+                      { borderColor: t.border, opacity: acting === offer.id ? 0.5 : pressed ? 0.85 : 1 },
+                    ]}
+                  >
+                    <Text style={[styles.declineText, { color: t.muted }]}>Decline</Text>
+                  </Pressable>
+                  <Pressable
+                    disabled={acting === offer.id}
+                    onPress={() => void respond(offer.id, 'accept')}
+                    style={({ pressed }) => [
+                      styles.acceptBtn,
+                      { backgroundColor: t.signal, opacity: acting === offer.id ? 0.6 : pressed ? 0.9 : 1 },
+                    ]}
+                  >
+                    {acting === offer.id ? (
+                      <ActivityIndicator color={t.onSignal} />
+                    ) : (
+                      <Text style={[styles.acceptText, { color: t.onSignal }]}>Accept</Text>
+                    )}
+                  </Pressable>
+                </View>
+              </View>
+            ))}
 
             {/* Online / offline toggle — the driver's control over the matcher. */}
             {isOnTrip ? (
@@ -236,6 +312,16 @@ const styles = StyleSheet.create({
   liveRow: { alignItems: 'center', flexDirection: 'row', gap: 8, marginTop: -8 },
   pulse: { borderRadius: 999, height: 8, width: 8 },
   liveText: { fontFamily: 'Inter_600SemiBold', fontSize: 13 },
+  offer: { borderRadius: 16, borderWidth: 1.5, gap: 12, padding: 20 },
+  offerEyebrow: { fontFamily: 'Inter_700Bold', fontSize: 12, letterSpacing: 1.2, textTransform: 'uppercase' },
+  offerLeg: { alignItems: 'center', flexDirection: 'row', gap: 10 },
+  legDot: { borderRadius: 999, height: 8, width: 8 },
+  legText: { flex: 1, fontFamily: 'Inter_600SemiBold', fontSize: 15 },
+  offerActions: { flexDirection: 'row', gap: 12, marginTop: 4 },
+  declineBtn: { alignItems: 'center', borderRadius: 12, borderWidth: 1, flex: 1, justifyContent: 'center', minHeight: 52 },
+  declineText: { fontFamily: 'Inter_600SemiBold', fontSize: 15 },
+  acceptBtn: { alignItems: 'center', borderRadius: 12, flex: 2, justifyContent: 'center', minHeight: 52 },
+  acceptText: { fontFamily: 'Inter_700Bold', fontSize: 16 },
   card: { borderRadius: 16, borderWidth: 1, gap: 4, padding: 20 },
   cardTitle: { fontFamily: 'Inter_600SemiBold', fontSize: 16 },
   body: { fontFamily: 'Inter_400Regular', fontSize: 15, lineHeight: 22 },
