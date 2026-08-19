@@ -20,6 +20,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
 import { useColorScheme } from 'react-native';
 
+import '@/lib/location'; // registers the background location task at app entry
 import { supabase } from '@/lib/supabase';
 
 void SplashScreen.preventAutoHideAsync();

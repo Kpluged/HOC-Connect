@@ -80,13 +80,40 @@ export function DispatchBoard({
   const pickup = toPoint(pLat, pLng);
   const dropoff = toPoint(dLat, dLng);
 
-  // Live: refresh the server-rendered board whenever any dispatch broadcast
-  // lands on this org's private channel (another manager, or our own action).
+  // Live driver positions patched from `driver.location` broadcasts, layered
+  // over the server-rendered roster so markers glide without a full refetch.
+  const [livePositions, setLivePositions] = useState<
+    Record<string, { lat: number; lng: number; operationalStatus?: string }>
+  >({});
+
+  // Live: a `driver.location` broadcast carries coordinates, so we patch just
+  // that marker; every other dispatch event re-fetches the server-rendered board.
   useEffect(() => {
     const supabase = createSupabaseBrowserClient();
     const channel = supabase
       .channel(`org:${organizationId}:dispatch`, { config: { private: true } })
-      .on("broadcast", { event: "*" }, () => router.refresh())
+      .on("broadcast", { event: "*" }, (msg) => {
+        const payload = msg.payload as
+          | { driverId?: string; lat?: number; lng?: number; operationalStatus?: string }
+          | undefined;
+        if (
+          msg.event === "driver.location" &&
+          payload?.driverId &&
+          typeof payload.lat === "number" &&
+          typeof payload.lng === "number"
+        ) {
+          setLivePositions((prev) => ({
+            ...prev,
+            [payload.driverId as string]: {
+              lat: payload.lat as number,
+              lng: payload.lng as number,
+              operationalStatus: payload.operationalStatus,
+            },
+          }));
+        } else {
+          router.refresh();
+        }
+      })
       .subscribe();
     return () => {
       void supabase.removeChannel(channel);
@@ -98,13 +125,17 @@ export function DispatchBoard({
   const hasDemo = trips.some((t) => t.isDemo);
 
   const markers = useMemo<MapMarker[]>(() => {
-    const driverMarkers: MapMarker[] = drivers.map((d) => ({
-      id: `driver-${d.id}`,
-      lat: d.lat,
-      lng: d.lng,
-      kind: d.operationalStatus === "on_trip" ? "driver-active" : "driver",
-      label: d.displayName,
-    }));
+    const driverMarkers: MapMarker[] = drivers.map((d) => {
+      const live = livePositions[d.id];
+      const status = live?.operationalStatus ?? d.operationalStatus;
+      return {
+        id: `driver-${d.id}`,
+        lat: live?.lat ?? d.lat,
+        lng: live?.lng ?? d.lng,
+        kind: status === "on_trip" ? "driver-active" : "driver",
+        label: d.displayName,
+      };
+    });
     const tripMarkers: MapMarker[] = activeTrips.map((t) => ({
       id: `trip-${t.id}`,
       lat: t.pickupLat,
@@ -116,7 +147,7 @@ export function DispatchBoard({
     if (pickup) pending.push({ id: "pending-pickup", lat: pickup.lat, lng: pickup.lng, kind: "pickup", label: "Pickup" });
     if (dropoff) pending.push({ id: "pending-dropoff", lat: dropoff.lat, lng: dropoff.lng, kind: "dropoff", label: "Drop-off" });
     return [...driverMarkers, ...tripMarkers, ...pending];
-  }, [drivers, activeTrips, pickup, dropoff]);
+  }, [drivers, activeTrips, pickup, dropoff, livePositions]);
 
   function handleMapClick(point: Point) {
     const lat = point.lat.toFixed(5);

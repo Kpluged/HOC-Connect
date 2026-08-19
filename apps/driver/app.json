@@ -7,14 +7,25 @@
     "icon": "./assets/images/hoc-logo.png",
     "scheme": "hoc-elite-wheels-driver",
     "userInterfaceStyle": "automatic",
-    "ios": {},
+    "ios": {
+      "infoPlist": {
+        "UIBackgroundModes": ["location", "fetch"]
+      }
+    },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#04060B",
         "foregroundImage": "./assets/images/hoc-logo.png",
         "monochromeImage": "./assets/images/hoc-logo.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "FOREGROUND_SERVICE",
+        "FOREGROUND_SERVICE_LOCATION"
+      ]
     },
     "web": {
       "output": "static",
@@ -30,7 +41,16 @@
           "imageWidth": 112
         }
       ],
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "HOC Elite Wheels uses your location to show you on the dispatch map and match you with nearby rides while you are online.",
+          "locationAlwaysAndWhenInUsePermission": "HOC Elite Wheels keeps sharing your location in the background while you are online so dispatch can keep matching you with rides and track live trips.",
+          "isAndroidBackgroundLocationEnabled": true,
+          "isAndroidForegroundServiceEnabled": true
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,
