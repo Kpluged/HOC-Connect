@@ -7,7 +7,7 @@ alter table app.drivers add column if not exists photo_path text;
 --> statement-breakpoint
 
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
-values ('driver-photos', 'driver-photos', false, 5242880,
+values ('driver-photos', 'driver-photos', false, 10485760,
         array['image/jpeg', 'image/png', 'image/webp'])
 on conflict (id) do nothing;
 --> statement-breakpoint

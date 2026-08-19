@@ -8,7 +8,9 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getServerCaller } from "@/server/trpc/caller";
 
 const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
-const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
+// Matches the driver-photos bucket limit and sits under the Server Action
+// bodySizeLimit (next.config.ts) so a valid image never trips the 1MB default.
+const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
 
 function isValidImage(file: FormDataEntryValue | null): file is File {
   return (
