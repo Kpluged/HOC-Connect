@@ -91,6 +91,22 @@ export function MapCanvas({
   );
 }
 
+function initialsFrom(name?: string): string {
+  if (!name) return "";
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  return parts
+    .slice(0, 2)
+    .map((part) => part[0]!)
+    .join("")
+    .toUpperCase();
+}
+
+/**
+ * Markers stay clean at a glance so clustered points (a driver sitting on their
+ * own pickup) never collide: drivers render as a compact colour-coded initials
+ * badge (Guards Red only for on-trip), pickup/drop-off as small dots, and every
+ * label is a hover-only tooltip rather than an always-on pill.
+ */
 function MarkerGlyph({
   kind,
   label,
@@ -100,20 +116,27 @@ function MarkerGlyph({
   label?: string;
   clickable: boolean;
 }) {
-  const dot =
-    kind === "driver-active"
-      ? "bg-signal ring-2 ring-canvas"
-      : kind === "driver"
-        ? "bg-primary ring-2 ring-canvas"
-        : kind === "pickup"
-          ? "bg-primary ring-2 ring-canvas"
-          : "bg-canvas ring-2 ring-primary";
+  const isDriver = kind === "driver" || kind === "driver-active";
 
   return (
-    <span className={`flex flex-col items-center gap-1 ${clickable ? "cursor-pointer" : ""}`}>
-      <span className={`block size-3.5 rounded-full shadow-[0_1px_4px_rgba(0,0,0,0.35)] ${dot}`} />
+    <span className={`group relative flex flex-col items-center ${clickable ? "cursor-pointer" : ""}`}>
+      {isDriver ? (
+        <span
+          className={`flex size-7 items-center justify-center rounded-full text-[10px] font-semibold ring-2 ring-canvas shadow-[0_1px_5px_rgba(0,0,0,0.35)] ${
+            kind === "driver-active" ? "bg-signal text-on-signal" : "bg-primary text-canvas"
+          }`}
+        >
+          {initialsFrom(label)}
+        </span>
+      ) : (
+        <span
+          className={`block size-3.5 rounded-full shadow-[0_1px_5px_rgba(0,0,0,0.35)] ${
+            kind === "pickup" ? "bg-primary ring-2 ring-canvas" : "bg-canvas ring-2 ring-primary"
+          }`}
+        />
+      )}
       {label ? (
-        <span className="max-w-[10rem] truncate rounded-control bg-canvas/90 px-1.5 py-0.5 text-[10px] font-semibold text-contrast-high shadow-sm backdrop-blur-sm">
+        <span className="pointer-events-none absolute top-full left-1/2 z-10 mt-1.5 max-w-[12rem] -translate-x-1/2 truncate whitespace-nowrap rounded-control bg-canvas/95 px-2 py-0.5 text-[10px] font-semibold text-contrast-high opacity-0 shadow-md backdrop-blur-sm transition-opacity duration-150 group-hover:opacity-100">
           {label}
         </span>
       ) : null}
