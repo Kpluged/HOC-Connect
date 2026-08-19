@@ -253,6 +253,16 @@ export const setDriverOperationalStatusSchema = z.object({
   operationalStatus: z.enum(["offline", "available"]),
 });
 
+/** A driver reporting their own position from the driver app (Milestone 9b). */
+export const reportLocationSchema = z.object({
+  lat: z.number().min(-90).max(90),
+  lng: z.number().min(-180).max(180),
+  operationalStatus: z.enum(["offline", "available"]).optional(),
+});
+
+/** tripId-only input shared by the offer accept/decline mutations. */
+export const tripActionSchema = z.object({ tripId: z.uuid() });
+
 export const maintenanceSeveritySchema = z.enum([
   "low",
   "medium",

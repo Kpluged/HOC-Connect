@@ -1,6 +1,7 @@
 import {
   createDriverSchema,
   membershipStatusSchema,
+  reportLocationSchema,
   setDriverOperationalStatusSchema,
   setDriverPhotoPathSchema,
   updateDriverStatusSchema,
@@ -162,6 +163,20 @@ export const driversRouter = router({
         });
 
         return { photoPath: updated.photoPath };
+      });
+    }),
+
+  // Driver-facing (Milestone 9b): the signed-in driver reports their own
+  // position + availability. The SECURITY DEFINER function only ever mutates the
+  // caller's own driver row and broadcasts the move to the org dispatch board.
+  reportLocation: protectedProcedure
+    .input(reportLocationSchema)
+    .mutation(async ({ ctx, input }) => {
+      return ctx.withRLS(async (tx) => {
+        await tx.execute(
+          sql`select app.driver_report_location(${input.lat}, ${input.lng}, ${input.operationalStatus ?? null})`,
+        );
+        return { ok: true };
       });
     }),
 

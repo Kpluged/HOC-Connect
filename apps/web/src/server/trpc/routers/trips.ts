@@ -1,6 +1,7 @@
 import {
   assignTripSchema,
   createTripSchema,
+  tripActionSchema,
   transitionTripSchema,
 } from "@hoc/contracts";
 import { TRPCError } from "@trpc/server";
@@ -146,6 +147,30 @@ export const tripsRouter = router({
         const [trip] = await tx.execute<TripRow>(sql`
           select ${tripReturning}
           from app.transition_trip(${input.tripId}, ${input.next}::app.trip_status) t
+        `);
+        return trip;
+      });
+    }),
+
+  // Driver-facing (Milestone 9b): accept/decline an offered ride. Authorization
+  // (the offered driver only) is enforced inside the SECURITY DEFINER function.
+  accept: protectedProcedure
+    .input(tripActionSchema)
+    .mutation(async ({ ctx, input }) => {
+      return ctx.withRLS(async (tx) => {
+        const [trip] = await tx.execute<TripRow>(sql`
+          select ${tripReturning} from app.accept_offer(${input.tripId}) t
+        `);
+        return trip;
+      });
+    }),
+
+  decline: protectedProcedure
+    .input(tripActionSchema)
+    .mutation(async ({ ctx, input }) => {
+      return ctx.withRLS(async (tx) => {
+        const [trip] = await tx.execute<TripRow>(sql`
+          select ${tripReturning} from app.decline_offer(${input.tripId}) t
         `);
         return trip;
       });
