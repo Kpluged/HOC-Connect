@@ -16,7 +16,7 @@
     "@hoc/design-tokens": "workspace:*",
     "@hoc/integrations": "workspace:*",
     "@opentelemetry/api": "^1.9.1",
-    "@sentry/nextjs": "^10.70.0",
+    "@sentry/nextjs": "^10.75.2",
     "@supabase/ssr": "^0.12.4",
     "@supabase/supabase-js": "^2.112.3",
     "@trpc/server": "^11.18.0",
